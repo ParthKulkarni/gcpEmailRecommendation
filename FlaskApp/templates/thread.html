@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<hr>
+
+<div class="conatainer">
+    <p>The recommended mails for you is as follows</p>
+    <table class="table table-striped">
+        <tr>
+            <th>Mail ID</th>
+            <th>Sender</th>
+            <th>BODY</th>
+            <th>Date</th>
+        </tr>
+        {% for thread in threads %}
+        <tr>
+            <td>{{thread.id}}</td>
+            <td>{{thread.author}}</td>
+            <td class = "show-read-more">{{thread.content}}</td>
+            <td>{{thread.date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
