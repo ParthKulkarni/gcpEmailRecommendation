@@ -122,6 +122,9 @@ print(len(thread_list))
 
 
 for thr in thread_list:
+    temp = ''
+    flag = 0
+    t = ''
     for mail in thr:
         count_file += 1
         sender = mail['From']
