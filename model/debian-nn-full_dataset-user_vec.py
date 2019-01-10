@@ -20,7 +20,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-
+from tqdm import tqdm, tqdm_notebook, tnrange
 tqdm.pandas(desc='Progress')
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
@@ -206,7 +206,7 @@ weight_list = []
 for i in range(0, df.thread_no.shape[0]+1):
     temp_index=indexx
     array  = np.zeros(user_vec_len)
-    for j in range(temp_index, temp_index + thread_no_list.count(i)):
+    for j in range(temp_index, temp_index + list(df.thread_no).count(i)):
         array[user_indices[j]] += 1
         weight_list.append(list(array))
         indexx+=1
@@ -303,7 +303,7 @@ opt = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 
 train_dl= DataLoader(ds, batch_size=1)
-print(len(train_dl))
+num_batch = len(train_dl)
 for epoch in range(num_epochs):
     y_true_train = list()
     y_pred_train = list()
