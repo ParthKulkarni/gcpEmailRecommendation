@@ -331,12 +331,12 @@ for epoch in range(num_epochs):
         loss.backward()
         opt.step()
 
-        t.set_postfix(loss=loss.data[0])
+        t.set_postfix(loss=loss.item())
         pred_idx = torch.max(pred, dim=1)[1]
 
         y_true_train += list(y.cpu().data.numpy())
         y_pred_train += list(pred_idx.cpu().data.numpy())
-        total_loss_train += loss.data[0]
+        total_loss_train += loss.item()
         
 
     train_acc = accuracy_score(y_true_train, y_pred_train)
