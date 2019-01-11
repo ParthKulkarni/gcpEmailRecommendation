@@ -261,7 +261,7 @@ ds = VectorizeData(file_name)
 
 
 input_size = ds.maxlen
-hidden_size = 30
+hidden_size = 10
 num_classes = user_vec_len
 num_epochs = 5
 batch_size = 1
@@ -279,7 +279,9 @@ class NeuralNet(nn.Module):
         super(NeuralNet, self).__init__()
         self.fc1 = nn.Linear(input_size + user_vec_len, hidden_size) 
         self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, num_classes)  
+        self.fc2 = nn.Linear(hidden_size,hidden_size)
+        self.relu = nn.ReLU()
+        self.fc3 = nn.Linear(hidden_size, num_classes)  
     
     def forward(self, x,w):
 #         x = torch.FloatTensor(x) 
@@ -287,6 +289,8 @@ class NeuralNet(nn.Module):
         out = self.fc1(catt)
         out = self.relu(out)       
         out = self.fc2(out)
+        out = self.relu(out)
+        out = self.fc3(out)
         return out
 
 
