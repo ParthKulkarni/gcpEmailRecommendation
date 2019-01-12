@@ -82,7 +82,7 @@ class preprocess:
 	def replace_tokens(self, message):
 		message = re.sub(r"\w*.doc$|\w*.pdf$|\w*.txt$|\w*.xls$|\w*.ppt$", "[filetype]", message) 
 		message = re.sub(r"\swhy$|\swhere$|\swho$|\swhat$|\swhen$","[wwhh]", message)  
-		message = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+ | \s*(www\.[^:\/\n]+\.com)\s* | \s*(< www\.[^:\/\n]+\.org >)\s*", "[url]", message)
+		message = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", "[url]", message)
 		message = re.sub(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", "[email]", message) 
 		message = re.sub(",|;|:|", "", message)
 		message = re.sub(r"\smonday|\smon|\stuesday|\stue|\swednesday|\swed|\sthursday|\sthu|\sfriday|\sfri|\ssaturday|\ssat|\ssunday|\ssun", "[day]", message)
