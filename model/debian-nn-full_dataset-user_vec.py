@@ -41,6 +41,7 @@ warnings.filterwarnings('ignore')
 
 folder_path = "/home/nikkikokitkar/gcpEmailRecommendation/Scraping/debian_dataset/*"
 file_name = "/home/nikkikokitkar/gcpEmailRecommendation/model/dataframe3.csv"
+file_name1 = "/home/nikkikokitkar/gcpEmailRecommendation/model/dataframe4.csv"
 sys.path.insert(0, '/home/nikkikokitkar/gcpEmailRecommendation/Preprocessing')
 PATH = '/home/nikkikokitkar/gcpEmailRecommendation/model/first_model.pt'
 
@@ -109,17 +110,20 @@ print(len(thread_list))
 
 
 # In[272]:
-
+df_trn = pd.DataFrame()
+df_tst = pd.DataFrame()
+split_date = datetime.datetime.strptime('01 Sep 2018 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
 users = []
 th_no = 0
 cnt = 0
 for thr in thread_list:
+    start_date = ""
     flag = 0
     t = ''
     for mail in thr:
         temp = ''
-        sender = mail['From']
+        sender = mail['From'].split('<')[0].strip()
         temp   = mail['content']
         users.append(sender)
         temp = deb_toppostremoval(temp)
@@ -130,12 +134,18 @@ for thr in thread_list:
             continue
         temp = obj.replace_tokens(temp)
         if flag==0:
+            start_date = datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z')
             t = temp
             flag = 1
             continue
-    # Add start/end date of each thread  |> FLAG
-        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no}, ignore_index=True)
-        t = t + temp
+        if start_date <= split_date:
+            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+            t = t + temp
+        else:
+            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+        
+        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+        #t = t + temp
     th_no += 1
 
 print(cnt)
@@ -146,19 +156,25 @@ print(len(df['replier'].unique()))
 rep_to_index = {}
 index = 0
 for rep in users:
-    if rep in rep_to_index:
-        continue
-    else:
+    if rep_to_index.get(rep, 0) == 0:
         rep_to_index[rep] = index
         index += 1
-pprint(len(rep_to_index))
-for rep in df['replier']:
-    df.loc[df['replier']==rep,'replier'] = rep_to_index[rep]
+pprint(rep_to_index)
 
+
+for rep in df_trn['replier']:
+    df_trn.loc[df_trn['replier']==rep,'int_replier'] = rep_to_index[rep]
+#print(df_trn.head)    
+
+for rep in df_tst['replier']:
+    df_tst.loc[df_tst['replier']==rep,'int_replier'] = rep_to_index[rep]
+    
 # Aggregate according to date / make separate thread list |> P flag
 # Split test_train_split 
-print(df.head)
-df.to_csv(file_name)
+#print(df.head)
+df_trn.head
+df_trn.to_csv(file_name)
+df_tst.to_csv(file_name1)
 # unique_users = len(df.replier.unique())
 
 
@@ -168,7 +184,7 @@ df.to_csv(file_name)
 
 
 words = Counter()
-for sent in df.body.values:
+for sent in df_trn.body.values:
     words.update(w.text.lower() for w in nlp(sent))
 # print(words)
 
@@ -178,7 +194,15 @@ words = ['_PAD','_UNK'] + words
 
 word2idx = {o:i for i,o in enumerate(words)}
 idx2word = {i:o for i,o in enumerate(words)}
-def indexer(s): return [word2idx[w.text.lower()] for w in nlp(s)]
+
+def indexer(s):
+    vec = []
+    for wr in nlp(s):
+        if wr not in word2idx:
+            vec.append(word2idx['_UNK'])
+        else:
+            vec.append(word2idx[wr])
+    return vec
 
 
 # # User Vector - construction
@@ -239,7 +263,7 @@ class VectorizeData(Dataset):
     def __getitem__(self, idx):
         X = self.df.bodypadded[idx]
         lens = self.df.lengths[idx]
-        y = self.df.replier[idx]
+        y = self.df.int_replier[idx]
         return X,y,lens
     
     def pad_data(self, s):
@@ -253,6 +277,7 @@ class VectorizeData(Dataset):
 
 
 ds = VectorizeData(file_name)
+dtest = VectorizeData(file_name1)
 
 
 # # Pytorch Feedforward Neural Network model
@@ -261,7 +286,7 @@ ds = VectorizeData(file_name)
 
 
 input_size = ds.maxlen
-hidden_size = 10
+hidden_size = 50
 num_classes = user_vec_len
 num_epochs = 5
 batch_size = 1
@@ -329,6 +354,7 @@ for epoch in range(num_epochs):
         opt.zero_grad()
         X = X.float()
         w = w.float()
+        y = y.long()
         pred = model(X,w)
         # F.nll_loss can be replaced with criterion
         loss = F.nll_loss(pred, y)
