@@ -3,7 +3,7 @@
 
 # # Preprocessing, building a Pandas dataframe and saving it as a  .csv file
 
-# In[88]:
+# In[130]:
 
 
 import re
@@ -111,7 +111,7 @@ except:
 print(len(thread_list))
 
 
-# In[89]:
+# In[131]:
 
 
 users = []
@@ -197,7 +197,7 @@ df_tst.to_csv(file_name1)
 
 # # Indexing of words in vocab
 
-# In[90]:
+# In[132]:
 
 
 words = Counter()
@@ -221,7 +221,7 @@ def indexer(s):
     return vec
 
 
-# In[63]:
+# In[133]:
 
 
 np.set_printoptions(threshold = sys.maxsize)
@@ -230,13 +230,13 @@ for u in users:
     user_indices.append(rep_to_index[u])
 
 
-# In[64]:
+# In[134]:
 
 
 user_vec_len = max(user_indices) + 1
 
 
-# In[65]:
+# In[135]:
 
 
 indexx=0
@@ -254,7 +254,7 @@ weights = np.array(weight_list)
 
 # # Dataset Loading
 
-# In[66]:
+# In[136]:
 
 
 # embedding |> flag
@@ -270,6 +270,7 @@ class VectorizeData(Dataset):
         print(self.maxlen)
         print('Padding')
         self.df['bodypadded'] = self.df.bodyidx.apply(self.pad_data)
+        print(self.df)
         
     def __len__(self):
         return self.df.shape[0]
@@ -277,7 +278,7 @@ class VectorizeData(Dataset):
     def __getitem__(self, idx):
         X = self.df.bodypadded[idx]
         lens = self.df.lengths[idx]
-        y = self.df.replier[idx]
+        y = self.df.int_replier[idx]
         return X,y,lens
     
     def pad_data(self, s):
@@ -287,14 +288,14 @@ class VectorizeData(Dataset):
         return padded
 
 
-# In[67]:
+# In[137]:
 
 
 ds = VectorizeData(file_name)
 dtest = VectorizeData(file_name1)
 
 
-# In[68]:
+# In[138]:
 
 
 input_size = ds.maxlen
@@ -306,7 +307,7 @@ learning_rate = 0.001
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-# In[69]:
+# In[139]:
 
 
 # concatenate user vector
@@ -327,7 +328,7 @@ class NeuralNet(nn.Module):
         return out
 
 
-# In[70]:
+# In[140]:
 
 
 model = NeuralNet(input_size, hidden_size,user_vec_len, num_classes).to(device)# Loss and optimizer
@@ -335,10 +336,11 @@ criterion = nn.CrossEntropyLoss()
 opt = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
 
-# In[71]:
+# In[141]:
 
 
 train_dl= DataLoader(ds, batch_size=1)
+#print(train_dl)
 num_batch = len(train_dl)
 for epoch in range(num_epochs):
     y_true_train = list()
@@ -346,8 +348,10 @@ for epoch in range(num_epochs):
     total_loss_train = 0
     t = tqdm_notebook(iter(train_dl), leave=False, total=num_batch)
     for we, w in zip(t,weights):
+        #print(we)
         X = we[0]
         y = we[1]
+        #print(type(y))
         lengths = we[2]
         
         w = w.reshape(-1,1)
@@ -361,6 +365,7 @@ for epoch in range(num_epochs):
         opt.zero_grad()
         X = X.float()
         w = w.float()
+        y = y.long()
         pred = model(X,w)
         # F.nll_loss can be replaced with criterion
         loss = F.nll_loss(pred, y)
@@ -384,7 +389,7 @@ torch.save(model.state_dict(),PATH)
 # architecture testing
 
 
-# In[72]:
+# In[142]:
 
 
 test_dl= DataLoader(dtest, batch_size=1)
