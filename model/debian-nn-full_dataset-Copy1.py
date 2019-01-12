@@ -3,7 +3,7 @@
 
 # # Preprocessing, building a Pandas dataframe and saving it as a  .csv file
 
-# In[1]:
+# In[88]:
 
 
 import re
@@ -19,7 +19,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+get_ipython().run_line_magic('matplotlib', 'inline')
 from tqdm import tqdm, tqdm_notebook, tnrange
 tqdm.pandas(desc='Progress')
 from sklearn.metrics import accuracy_score
@@ -36,21 +36,18 @@ from torch.autograd import Variable
 import warnings
 warnings.filterwarnings('ignore')
 
+from IPython.core.interactiveshell import InteractiveShell
+InteractiveShell.ast_node_interactivity='all'
 
-folder_path = "/home/niki/Documents/BE_Project/EmailRecommendation/Scraping/debian_dataset/*"
-file_name = "/home/niki/Documents/BE_Project/my_EmailRecommmendation/model/dataframe3.csv"
-sys.path.insert(0, '/home/niki/Documents/BE_Project/my_EmailRecommmendation/Preprocessing')
-
+folder_path = "/home/parth/BE_Project/my_EmailRecommmendation/Scraping/mini_deb/*"
+file_name = "/home/parth/BE_Project/my_EmailRecommmendation/model/dataframe3.csv"
+file_name1 = "/home/parth/BE_Project/my_EmailRecommmendation/model/dataframe4.csv"
+sys.path.insert(0, '/home/parth/BE_Project/my_EmailRecommmendation/Preprocessing')
+PATH = '/home/parth/BE_Project/my_EmailRecommmendation/model/first_model.pt'
 
 import preprocessing
 import read_file
 import datetime
-
-
-def get_sender(msg):
-    msg = email.message_from_string(msg)
-    mfrom = msg['From'].split('<')[0]
-    return mfrom
 
 def extract_debian(text):
     text = text.split('\n\n\n')
@@ -92,7 +89,6 @@ def deb_toppostremoval(temp):
     return temp
 
 df = pd.DataFrame(columns=['body','replier', 'thread_no'])
-users = []
 folder = glob.glob(folder_path)
 th_no = 0
 obj = preprocessing.preprocess()
@@ -102,8 +98,6 @@ thread_list=[]
 try:
     for fol in tqdm_notebook(folder):
         files = glob.glob(fol+'/*.txt')
-        flag = 0
-        t = ''
         threads = []
         for file in files:
             ob = read_file.file_content(file)
@@ -117,17 +111,27 @@ except:
 print(len(thread_list))
 
 
-# In[ ]:
+# In[89]:
 
 
+users = []
+th_no = 0
+empty = open('null.txt','w')
+cnt = 0
 
+df_trn = pd.DataFrame()
+df_tst = pd.DataFrame()
+
+split_date = datetime.datetime.strptime('01 Sep 2017 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
+
+empty = open('null.txt','w')
 for thr in thread_list:
-    temp = ''
+    start_date = ""
     flag = 0
     t = ''
     for mail in thr:
-        count_file += 1
-        sender = mail['From']
+        temp = ''
+        sender = mail['From'].split('<')[0].strip()
         temp   = mail['content']
         users.append(sender)
         temp = deb_toppostremoval(temp)
@@ -135,62 +139,125 @@ for thr in thread_list:
         temp = clean_debian(temp)
         if temp == '':
             cnt += 1
-
+            print('NULL')
             continue
         temp = obj.replace_tokens(temp)
         if flag==0:
+            start_date = datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z')
+            #print(start_date)
             t = temp
             flag = 1
             continue
-        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no}, ignore_index=True)
-        t = t + temp
+        
+        if start_date <= split_date:
+            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+            t = t + temp
+        else:
+            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+        
+        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+        #t = t + temp
+    th_no += 1
 
-#         break
-#     break
-
+    
+# empty.close()
 print(cnt)
 print(count_file)
 print(len(df['body']))
 print(len(df['thread_no'].unique()))
 print(len(df['replier'].unique()))
+
 rep_to_index = {}
-count = 0
-for rep in df['replier']:
-    if rep in rep_to_index:
-        continue
-    else:
-        rep_to_index[rep] = count
-        count += 1
-pprint(len(rep_to_index))
-for rep in df['replier']:
-    df.loc[df['replier']==rep,'replier'] = rep_to_index[rep]
-print(df.head)
-df.to_csv(file_name)
-unique_users = len(df.replier.unique())
+index = 0
+print(users)
+for rep in users:
+    if rep_to_index.get(rep, 0) == 0:
+        rep_to_index[rep] = index
+        index += 1
+pprint(rep_to_index)
+
+
+# print(df_tst.head)
+
+for rep in df_trn['replier']:
+    df_trn.loc[df_trn['replier']==rep,'int_replier'] = rep_to_index[rep]
+#print(df_trn.head)    
+
+for rep in df_tst['replier']:
+    df_tst.loc[df_tst['replier']==rep,'int_replier'] = rep_to_index[rep]
+    
+# Aggregate according to date / make separate thread list |> P flag
+# Split test_train_split 
+#print(df.head)
+df_trn.head
+df_trn.to_csv(file_name)
+df_tst.to_csv(file_name1)
+# unique_users = len(df.replier.unique())
 
 
 # # Indexing of words in vocab
 
-# In[2]:
+# In[90]:
 
 
 words = Counter()
-for sent in df.body.values:
+for sent in df_trn.body.values:
     words.update(w.text.lower() for w in nlp(sent))
+# print(words)
 
 words = sorted(words, key=words.get, reverse=True)
+print(words)
 words = ['_PAD','_UNK'] + words
 
 word2idx = {o:i for i,o in enumerate(words)}
 idx2word = {i:o for i,o in enumerate(words)}
-def indexer(s): return [word2idx[w.text.lower()] for w in nlp(s)]
+def indexer(s):
+    vec = []
+    for wr in nlp(s):
+        if wr not in word2idx:
+            vec.append(word2idx['_UNK'])
+        else:
+            vec.append(word2idx[wr])
+    return vec
+
+
+# In[63]:
+
+
+np.set_printoptions(threshold = sys.maxsize)
+user_indices = []
+for u in users:
+    user_indices.append(rep_to_index[u])
+
+
+# In[64]:
+
+
+user_vec_len = max(user_indices) + 1
+
+
+# In[65]:
+
+
+indexx=0
+weight_list = []
+for i in range(0, df.thread_no.shape[0]+1):
+    temp_index=indexx
+    array  = np.zeros(user_vec_len)
+    for j in range(temp_index, temp_index + list(df.thread_no).count(i)):
+        array[user_indices[j]] += 1
+        weight_list.append(list(array))
+        indexx+=1
+
+weights = np.array(weight_list)
 
 
 # # Dataset Loading
 
-# In[3]:
+# In[66]:
 
 
+# embedding |> flag
 class VectorizeData(Dataset):
     def __init__(self, df_path, maxlen=10):
         self.df = pd.read_csv(df_path, error_bad_lines=False)
@@ -200,6 +267,7 @@ class VectorizeData(Dataset):
         print('Calculating lengths')
         self.df['lengths'] = self.df.bodyidx.apply(len)
         self.maxlen = max(self.df['lengths'])
+        print(self.maxlen)
         print('Padding')
         self.df['bodypadded'] = self.df.bodyidx.apply(self.pad_data)
         
@@ -219,52 +287,55 @@ class VectorizeData(Dataset):
         return padded
 
 
-# In[4]:
+# In[67]:
 
 
 ds = VectorizeData(file_name)
+dtest = VectorizeData(file_name1)
 
 
-# In[10]:
+# In[68]:
 
 
 input_size = ds.maxlen
 hidden_size = 30
-num_classes = unique_users
+num_classes = user_vec_len
 num_epochs = 5
 batch_size = 1
 learning_rate = 0.001
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-# In[11]:
+# In[69]:
 
 
+# concatenate user vector
+# embeddings |>
 class NeuralNet(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
+    def __init__(self, input_size, hidden_size,user_vec_len, num_classes):
         super(NeuralNet, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size) 
+        self.fc1 = nn.Linear(input_size + user_vec_len, hidden_size) 
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size, num_classes)  
     
-    def forward(self, x):
-#         x = torch.FloatTensor(x)
-        out = self.fc1(x)
-        out = self.relu(out)
+    def forward(self, x,w):
+#         x = torch.FloatTensor(x) 
+        catt = torch.cat((x,w),1)
+        out = self.fc1(catt)
+        out = self.relu(out)       
         out = self.fc2(out)
         return out
 
 
-# In[12]:
+# In[70]:
 
 
-model = NeuralNet(input_size, hidden_size, num_classes).to(device)
-# Loss and optimizer
+model = NeuralNet(input_size, hidden_size,user_vec_len, num_classes).to(device)# Loss and optimizer
 criterion = nn.CrossEntropyLoss()
 opt = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
 
-# In[ ]:
+# In[71]:
 
 
 train_dl= DataLoader(ds, batch_size=1)
@@ -274,15 +345,24 @@ for epoch in range(num_epochs):
     y_pred_train = list()
     total_loss_train = 0
     t = tqdm_notebook(iter(train_dl), leave=False, total=num_batch)
-    for X,y, lengths in t:
-    #     X = X.transpose(0,1)
+    for we, w in zip(t,weights):
+        X = we[0]
+        y = we[1]
+        lengths = we[2]
+        
+        w = w.reshape(-1,1)
+        w = w.transpose()
+        
+        w = Variable(torch.Tensor(w).cpu())
         X = Variable(X.cpu())
         y = Variable(y.cpu())
         lengths = lengths.numpy()
 
         opt.zero_grad()
         X = X.float()
-        pred = model(X)
+        w = w.float()
+        pred = model(X,w)
+        # F.nll_loss can be replaced with criterion
         loss = F.nll_loss(pred, y)
         loss.backward()
         opt.step()
@@ -297,4 +377,57 @@ for epoch in range(num_epochs):
     train_acc = accuracy_score(y_true_train, y_pred_train)
     train_loss = total_loss_train/len(train_dl)
     print(f' Epoch {epoch}: Train loss: {train_loss} acc: {train_acc}')
+torch.save(model.state_dict(),PATH)
+#Accuracy
+# hyperparameter tuning
+#Testing
+# architecture testing
+
+
+# In[72]:
+
+
+test_dl= DataLoader(dtest, batch_size=1)
+num_batches = len(test_dl)
+y_true_test1 = list()
+y_pred_test1 = list()
+total_loss_train = 0
+tt = tqdm_notebook(iter(test_dl), leave=False, total=num_batch1)
+for we, w in zip(tt,weights):
+    X = we[0]
+    y = we[1]
+    lengths = we[2]
+
+    w = w.reshape(-1,1)
+    w = w.transpose()
+
+    w = Variable(torch.Tensor(w).cpu())
+    X = Variable(X.cpu())
+    y = Variable(y.cpu())
+    lengths = lengths.numpy()
+
+    opt.zero_grad()
+    X = X.float()
+    w = w.float()
+    pred = model(X,w)
+    # F.nll_loss can be replaced with criterion
+    loss = F.nll_loss(pred, y)
+    loss.backward()
+    opt.step()
+
+    t.set_postfix(loss=loss.data[0])
+    pred_idx = torch.max(pred, dim=1)[1]
+
+    y_true_train += list(y.cpu().data.numpy())
+    y_pred_train += list(pred_idx.cpu().data.numpy())
+    total_loss_train += loss.data[0]
+
+train_acc = accuracy_score(y_true_train, y_pred_train)
+train_loss = total_loss_train/len(train_dl)
+print(f' Epoch {epoch}: Train loss: {train_loss} acc: {train_acc}')
+torch.save(model.state_dict(),PATH)
+#Accuracy
+# hyperparameter tuning
+#Testing
+# architecture testing
 

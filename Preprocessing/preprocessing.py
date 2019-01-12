@@ -80,13 +80,14 @@ class preprocess:
 		return msg
 		                   
 	def replace_tokens(self, message):
-		message = re.sub(r"\w*.doc|\w*.pdf|\w*.txt|\w*.xls|\w*.ppt", "[filetype]", message) 
-		message = re.sub(r"\swhy|\swhere|\swho|\swhat|\swhen","[wwhh]", message)  
-		message = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", "[url]", message) 
+		message = re.sub(r"\w*.doc$|\w*.pdf$|\w*.txt$|\w*.xls$|\w*.ppt$", "[filetype]", message) 
+		message = re.sub(r"\swhy$|\swhere$|\swho$|\swhat$|\swhen$","[wwhh]", message)  
+		message = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+ | \s*(www\.[^:\/\n]+\.com)\s* | \s*(< www\.[^:\/\n]+\.org >)\s*", "[url]", message)
+		message = re.sub(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", "[email]", message) 
 		message = re.sub(",|;|:|", "", message)
 		message = re.sub(r"\smonday|\smon|\stuesday|\stue|\swednesday|\swed|\sthursday|\sthu|\sfriday|\sfri|\ssaturday|\ssat|\ssunday|\ssun", "[day]", message)
-		message = re.sub(r"\sme|\sher|\shim|\sus|\sthem", "[me]", message)
-		message = re.sub(r"\sI|\swe|\syou|\she|\sshe|\sthey", "[person]", message)
+		message = re.sub(r"\sme|\sher$|\shim$|\sus$|\sthem$", "[me]", message)
+		message = re.sub(r"\sI$|\swe$|\syou$|\she$|\sshe$|\sthey$", "[person]", message)
 		message = re.sub(r'\d+', "[number]" ,message)
 
 		return message
@@ -103,7 +104,7 @@ class preprocess:
 		for w in doc:
             # if it's not a stop word or punctuation mark, add it to our article
 			if w.text != '\n' and not w.is_stop and not w.is_punct and not w.like_num and w.text!='I':
-#               # we add the lematized version of the word
+#               # we add the lemmatized version of the word
 				if w.lemma_!='-PRON-' and w.lemma_!=' \n'and w.lemma_!='\n \n \n':
 					article += " " + w.lemma_
             # if it's a new line, it means we're onto our next document
