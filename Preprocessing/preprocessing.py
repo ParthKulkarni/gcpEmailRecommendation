@@ -88,7 +88,7 @@ class preprocess:
 		message = re.sub(r"\smonday|\smon|\stuesday|\stue|\swednesday|\swed|\sthursday|\sthu|\sfriday|\sfri|\ssaturday|\ssat|\ssunday|\ssun", "", message)
 		message = re.sub(r"\sme$|\sher$|\shim$|\sus$|\sthem$", "", message)
 		message = re.sub(r"\sI$|\swe$|\syou$|\she$|\sshe$|\sthey$", "", message)
-		message = re.sub(r'\d+', "" ,message)
+		message = re.sub(r'\d+', " " ,message)
 
 		return message
 
