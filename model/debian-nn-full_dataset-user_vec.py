@@ -482,7 +482,7 @@ for we, w in zip(tt,tst_weights):
 
     y_true_train += list(y.cpu().data.numpy())
     y_pred_train += list(pred_idx.cpu().data.numpy())
-    total_loss_train += loss.data[0]
+    total_loss_train += loss.item()
 
 train_acc = accuracy_score(y_true_train, y_pred_train)
 train_loss = total_loss_train/len(train_dl)
@@ -528,7 +528,7 @@ for we, w in zip(tt,tst_weights):
 
     y_true_train += list(y.cpu().data.numpy())
     y_pred_train += list(pred_idx.cpu().data.numpy())
-    total_loss_train += loss.data[0]
+    total_loss_train += loss.item()
 
 train_acc = accuracy_score(y_true_train, y_pred_train)
 train_loss = total_loss_train/len(train_dl)
