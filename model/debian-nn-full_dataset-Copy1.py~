@@ -219,7 +219,7 @@ df.to_csv(file_name2)
 
 
 words = Counter()
-for sent in df_trn.body.values:
+for sent in df.body.values:
     words.update(w.text.lower() for w in nlp(sent))
 # print(words)
 
