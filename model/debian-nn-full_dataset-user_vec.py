@@ -147,7 +147,7 @@ for thr in thread_list:
             flag = 1
             continue
 
-<<<<<<< HEAD
+
         df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
 
         if start_date <= split_date:
@@ -157,17 +157,7 @@ for thr in thread_list:
         else:
             df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
             tst_users.append(sender)
-=======
-	df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
-	
-        if start_date <= split_date:
-            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
-			trn_users.append(sender)
-            t = t + temp
-        else:
-            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
-        	tst_users.append(sender)
->>>>>>> 5595a283d52e6ad0e0e9b8b8a69db57914ffd357
+
         
         #t = t + temp
     th_no += 1
@@ -196,14 +186,12 @@ for rep in df_tst['replier']:
 for rep in df['replier']:
     df.loc[df['replier']==rep,'int_replier'] = rep_to_index[rep]
     
-<<<<<<< HEAD
-=======
 for rep in df['replier']:
     df.loc[df['replier']==rep,'int_replier'] = rep_to_index[rep]
     
 
 #Offset the replier in test dataframe
->>>>>>> 5595a283d52e6ad0e0e9b8b8a69db57914ffd357
+
 df_tst['replier'] = df_tst.groupby('thread_no')['replier'].shift(-1)
 df_tst['int_replier'] = df_tst.groupby('thread_no')['int_replier'].shift(-1)
 
@@ -212,12 +200,11 @@ df_tst.dropna(inplace=True)
 df_trn.to_csv(file_name)
 df_tst.to_csv(file_name1)
 df.to_csv(file_name2)
-<<<<<<< HEAD
-=======
+
 # Aggregate according to date / make separate thread list |> P flag
 # Split test_train_split 
 #print(df.head)
->>>>>>> 5595a283d52e6ad0e0e9b8b8a69db57914ffd357
+
 # unique_users = len(df.replier.unique())
 
 
@@ -259,25 +246,18 @@ np.set_printoptions(threshold = sys.maxsize)
 user_indices = []
 trn_user_indices = []
 tst_user_indices = []
-<<<<<<< HEAD
-=======
 
->>>>>>> 5595a283d52e6ad0e0e9b8b8a69db57914ffd357
 for u in users:
     user_indices.append(rep_to_index[u])
 
 for v in trn_users:
     trn_user_indices.append(rep_to_index[v])
-<<<<<<< HEAD
-for w in tst_users:
-    tst_user_indices.append(rep_to_index[w])
-=======
-    
+
 for w in tst_users:
     tst_user_indices.append(rep_to_index[w])
 
 
->>>>>>> 5595a283d52e6ad0e0e9b8b8a69db57914ffd357
+
 # In[275]:
 
 
@@ -298,27 +278,12 @@ for i in range(0, df_trn.thread_no.shape[0]+1):
 
 trn_weights = np.array(weight_list)
 
-indexx=0
-weight_list = []
-<<<<<<< HEAD
-for i in range(0, df_trn.thread_no.shape[0]+1):
-    temp_index=indexx
-    array  = np.zeros(user_vec_len)
-    for j in range(temp_index, temp_index + list(df_trn.thread_no).count(i)):
-        array[trn_user_indices[j]] += 1
-        weight_list.append(list(array))
-        indexx+=1
-
-trn_weights = np.array(weight_list)
-
 
 # In[169]:
 
 
 indexx=0
 weight_list = []
-=======
->>>>>>> 5595a283d52e6ad0e0e9b8b8a69db57914ffd357
 for i in range(0, df_tst.thread_no.shape[0]+1):
     temp_index=indexx
     array  = np.zeros(user_vec_len)
