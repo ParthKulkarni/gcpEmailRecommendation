@@ -3,7 +3,7 @@
 
 # # Preprocessing, building a Pandas dataframe and saving it as a  .csv file
 
-# In[130]:
+# In[85]:
 
 
 import re
@@ -42,6 +42,7 @@ InteractiveShell.ast_node_interactivity='all'
 folder_path = "/home/parth/BE_Project/my_EmailRecommmendation/Scraping/mini_deb/*"
 file_name = "/home/parth/BE_Project/my_EmailRecommmendation/model/dataframe3.csv"
 file_name1 = "/home/parth/BE_Project/my_EmailRecommmendation/model/dataframe4.csv"
+file_name2 = "/home/parth/BE_Project/my_EmailRecommmendation/model/dataframe5.csv"
 sys.path.insert(0, '/home/parth/BE_Project/my_EmailRecommmendation/Preprocessing')
 PATH = '/home/parth/BE_Project/my_EmailRecommmendation/model/first_model.pt'
 
@@ -111,12 +112,14 @@ except:
 print(len(thread_list))
 
 
-# In[131]:
+# In[86]:
 
 
 users = []
+trn_users = []
+tst_users = []
 th_no = 0
-empty = open('null.txt','w')
+#empty = open('null.txt','w')
 cnt = 0
 
 df_trn = pd.DataFrame()
@@ -124,7 +127,7 @@ df_tst = pd.DataFrame()
 
 split_date = datetime.datetime.strptime('01 Sep 2017 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
-empty = open('null.txt','w')
+#empty = open('null.txt','w')
 for thr in thread_list:
     start_date = ""
     flag = 0
@@ -144,19 +147,25 @@ for thr in thread_list:
         temp = obj.replace_tokens(temp)
         if flag==0:
             start_date = datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z')
-            #print(start_date)
+            if start_date > split_date:
+                df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+                tst_users.append(sender)
+            else:
+                trn_users.append(sender)
             t = temp
             flag = 1
             continue
+            
+        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
         
         if start_date <= split_date:
             df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
+            trn_users.append(sender)
             t = t + temp
         else:
             df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
-        
-        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date}, ignore_index=True)
-        #t = t + temp
+            tst_users.append(sender)
+            
     th_no += 1
 
     
@@ -170,6 +179,8 @@ print(len(df['replier'].unique()))
 rep_to_index = {}
 index = 0
 print(users)
+#print(trn_users)
+#print(tst_users)
 for rep in users:
     if rep_to_index.get(rep, 0) == 0:
         rep_to_index[rep] = index
@@ -186,87 +197,132 @@ for rep in df_trn['replier']:
 for rep in df_tst['replier']:
     df_tst.loc[df_tst['replier']==rep,'int_replier'] = rep_to_index[rep]
     
-# Aggregate according to date / make separate thread list |> P flag
-# Split test_train_split 
-#print(df.head)
-df_trn.head
+for rep in df['replier']:
+    df.loc[df['replier']==rep,'int_replier'] = rep_to_index[rep]
+    
+
+#Offset the replier in test dataframe
+df_tst['replier'] = df_tst.groupby('thread_no')['replier'].shift(-1)
+df_tst['int_replier'] = df_tst.groupby('thread_no')['int_replier'].shift(-1)
+
+df_tst.dropna(inplace=True)
+
 df_trn.to_csv(file_name)
 df_tst.to_csv(file_name1)
+df.to_csv(file_name2)
 # unique_users = len(df.replier.unique())
 
 
 # # Indexing of words in vocab
 
-# In[132]:
+# In[164]:
 
 
 words = Counter()
-for sent in df_trn.body.values:
+for sent in df.body.values:
     words.update(w.text.lower() for w in nlp(sent))
 # print(words)
 
 words = sorted(words, key=words.get, reverse=True)
-print(words)
 words = ['_PAD','_UNK'] + words
 
 word2idx = {o:i for i,o in enumerate(words)}
 idx2word = {i:o for i,o in enumerate(words)}
+import pprint
+
+pprint.pprint(word2idx)
+print('allow' in word2idx)
+print(word2idx['allow'])
 def indexer(s):
     vec = []
     for wr in nlp(s):
-        if wr not in word2idx:
-            vec.append(word2idx['_UNK'])
-        else:
+        wr = wr.text.lower()
+        if wr in word2idx:
             vec.append(word2idx[wr])
+        else:
+            vec.append(word2idx['_PAD'])
     return vec
 
 
-# In[133]:
+# In[165]:
 
 
 np.set_printoptions(threshold = sys.maxsize)
 user_indices = []
+trn_user_indices = []
+tst_user_indices = []
 for u in users:
     user_indices.append(rep_to_index[u])
 
 
-# In[134]:
+# In[166]:
+
+
+for v in trn_users:
+    trn_user_indices.append(rep_to_index[v])
+for w in tst_users:
+    tst_user_indices.append(rep_to_index[w])
+#pprint(user_indices)
+#pprint(trn_user_indices)
+#pprint(tst_user_indices)
+
+
+# In[167]:
 
 
 user_vec_len = max(user_indices) + 1
 
 
-# In[135]:
+# In[168]:
 
 
 indexx=0
 weight_list = []
-for i in range(0, df.thread_no.shape[0]+1):
+for i in range(0, df_trn.thread_no.shape[0]+1):
     temp_index=indexx
     array  = np.zeros(user_vec_len)
-    for j in range(temp_index, temp_index + list(df.thread_no).count(i)):
-        array[user_indices[j]] += 1
+    for j in range(temp_index, temp_index + list(df_trn.thread_no).count(i)):
+        array[trn_user_indices[j]] += 1
         weight_list.append(list(array))
         indexx+=1
 
-weights = np.array(weight_list)
+trn_weights = np.array(weight_list)
+
+
+# In[169]:
+
+
+indexx=0
+weight_list = []
+for i in range(0, df_tst.thread_no.shape[0]+1):
+    temp_index=indexx
+    array  = np.zeros(user_vec_len)
+    for j in range(temp_index, temp_index + list(df_tst.thread_no).count(i)):
+        array[tst_user_indices[j]] += 1
+        weight_list.append(list(array))
+        indexx+=1
+
+tst_weights = np.array(weight_list)
 
 
 # # Dataset Loading
 
-# In[136]:
+# In[170]:
 
 
 # embedding |> flag
 class VectorizeData(Dataset):
-    def __init__(self, df_path, maxlen=10):
+    def __init__(self, df_path, maxlen=10, calc_maxlen = False):
         self.df = pd.read_csv(df_path, error_bad_lines=False)
         self.df['body'] = self.df.body.apply(lambda x: x.strip())
         print('Indexing...')
         self.df['bodyidx'] = self.df.body.apply(indexer)
         print('Calculating lengths')
         self.df['lengths'] = self.df.bodyidx.apply(len)
-        self.maxlen = max(self.df['lengths'])
+        if calc_maxlen == True:
+            self.maxlen = max(self.df['lengths'])
+        else:
+            self.maxlen = maxlen
         print(self.maxlen)
         print('Padding')
         self.df['bodypadded'] = self.df.bodyidx.apply(self.pad_data)
@@ -288,14 +344,15 @@ class VectorizeData(Dataset):
         return padded
 
 
-# In[137]:
+# In[171]:
 
 
-ds = VectorizeData(file_name)
-dtest = VectorizeData(file_name1)
+ds = VectorizeData(file_name2, calc_maxlen = True)
+dtrain = VectorizeData(file_name, maxlen = ds.maxlen)
+dtest = VectorizeData(file_name1, maxlen = ds.maxlen)
 
 
-# In[138]:
+# In[172]:
 
 
 input_size = ds.maxlen
@@ -307,7 +364,7 @@ learning_rate = 0.001
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-# In[139]:
+# In[173]:
 
 
 # concatenate user vector
@@ -328,18 +385,19 @@ class NeuralNet(nn.Module):
         return out
 
 
-# In[140]:
+# In[174]:
 
 
 model = NeuralNet(input_size, hidden_size,user_vec_len, num_classes).to(device)# Loss and optimizer
 criterion = nn.CrossEntropyLoss()
 opt = torch.optim.Adam(model.parameters(), lr=learning_rate)  
+print(model)
 
 
-# In[141]:
+# In[175]:
 
 
-train_dl= DataLoader(ds, batch_size=1)
+train_dl= DataLoader(dtrain, batch_size=1)
 #print(train_dl)
 num_batch = len(train_dl)
 for epoch in range(num_epochs):
@@ -347,7 +405,7 @@ for epoch in range(num_epochs):
     y_pred_train = list()
     total_loss_train = 0
     t = tqdm_notebook(iter(train_dl), leave=False, total=num_batch)
-    for we, w in zip(t,weights):
+    for we, w in zip(t,trn_weights):
         #print(we)
         X = we[0]
         y = we[1]
@@ -389,7 +447,7 @@ torch.save(model.state_dict(),PATH)
 # architecture testing
 
 
-# In[142]:
+# In[176]:
 
 
 test_dl= DataLoader(dtest, batch_size=1)
@@ -397,12 +455,12 @@ num_batches = len(test_dl)
 y_true_test1 = list()
 y_pred_test1 = list()
 total_loss_train = 0
-tt = tqdm_notebook(iter(test_dl), leave=False, total=num_batch1)
-for we, w in zip(tt,weights):
+tt = tqdm_notebook(iter(test_dl), leave=False, total=num_batch)
+for we, w in zip(tt,tst_weights):
     X = we[0]
     y = we[1]
     lengths = we[2]
-
+    
     w = w.reshape(-1,1)
     w = w.transpose()
 
@@ -411,17 +469,19 @@ for we, w in zip(tt,weights):
     y = Variable(y.cpu())
     lengths = lengths.numpy()
 
-    opt.zero_grad()
+    #opt.zero_grad()
     X = X.float()
     w = w.float()
+    y = y.long()
     pred = model(X,w)
+    print(pred)
     # F.nll_loss can be replaced with criterion
     loss = F.nll_loss(pred, y)
-    loss.backward()
-    opt.step()
+    #loss.backward()
+    #opt.step()
 
-    t.set_postfix(loss=loss.data[0])
-    pred_idx = torch.max(pred, dim=1)[1]
+    #t.set_postfix(loss=loss.data[0])
+    #pred_idx = torch.max(pred, dim=1)[1]
 
     y_true_train += list(y.cpu().data.numpy())
     y_pred_train += list(pred_idx.cpu().data.numpy())
@@ -430,7 +490,7 @@ for we, w in zip(tt,weights):
 train_acc = accuracy_score(y_true_train, y_pred_train)
 train_loss = total_loss_train/len(train_dl)
 print(f' Epoch {epoch}: Train loss: {train_loss} acc: {train_acc}')
-torch.save(model.state_dict(),PATH)
+#torch.save(model.state_dict(),PATH)
 #Accuracy
 # hyperparameter tuning
 #Testing
