@@ -228,7 +228,7 @@ word2idx = {o:i for i,o in enumerate(words)}
 idx2word = {i:o for i,o in enumerate(words)}
 
 def indexer(s):
-    modell="/home/niki/Downloads/apnews_dbow/doc2vec.bin"
+    modell="/home/nikkikokitkar/apnews_dbow/doc2vec.bin"
     start_alpha=0.01
     infer_epoch=1000
     m = gensim.models.Doc2Vec.load(modell)
