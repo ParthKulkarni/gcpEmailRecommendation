@@ -2,6 +2,10 @@ import glob
 # from flanker import mime
 import re
 import spacy
+from langdetect import detect
+import nltk
+from nltk.tag.stanford import StanfordNERTagger
+
 
 class preprocess:
 
@@ -44,6 +48,8 @@ class preprocess:
 		msg = msg.splitlines()
 		i = 0	
 		while i < len(msg) :
+			if detect(str(msg[i])) != 'en':
+				continue  
 			if (msg[i] == '') or ("//" in msg[i]) :
 				i += 1
 				continue
@@ -82,13 +88,15 @@ class preprocess:
 	def replace_tokens(self, message):
 		message = re.sub(r"\w*.doc$|\w*.pdf$|\w*.txt$|\w*.xls$|\w*.ppt$", "", message) 
 		message = re.sub(r"\swhy$|\swhere$|\swho$|\swhat$|\swhen$","", message)  
-		message = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", "", message)
-		message = re.sub(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", "", message) 
-		message = re.sub(",|;|:|", "", message)
+		message = re.sub(r"(http|https|ftp)://.*|www.*", "", message)
+		message = re.sub(r"\S+@\S+", "", message) 
 		message = re.sub(r"\smonday|\smon|\stuesday|\stue|\swednesday|\swed|\sthursday|\sthu|\sfriday|\sfri|\ssaturday|\ssat|\ssunday|\ssun", "", message)
 		message = re.sub(r"\sme$|\sher$|\shim$|\sus$|\sthem$", "", message)
 		message = re.sub(r"\sI$|\swe$|\syou$|\she$|\sshe$|\sthey$", "", message)
-		message = re.sub(r'\d+', " " ,message)
+		message = re.sub(r'\d+', "" ,message)
+		message = re.sub(' +', ' ', message)
+		message = re.sub("(,|;|\+|\-|\$|=|<|>|[|]|\*|`|\"|:|/)+", "", message)
+		message = re.sub("⠁|⠋|⠒|⠘|⠚|⠷⠻|⠾|⡁|⡄|⢀|⢠|⢶|⢿|⣦|⣴|⣾|⣿|⠷|⠻|🐁|🐈", "", message)
 
 		return message
 
