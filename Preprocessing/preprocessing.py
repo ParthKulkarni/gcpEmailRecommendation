@@ -4,7 +4,7 @@ import re
 import spacy
 from langdetect import detect
 import nltk
-from nltk.tag.stanford import StanfordNERTagger
+#from nltk.tag.stanford import StanfordNERTagger
 
 
 class preprocess:
