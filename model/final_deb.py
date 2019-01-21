@@ -4,7 +4,10 @@
 # # Preprocessing, building a Pandas dataframe and saving it as a  .csv file
 
 # In[5]:
-
+from dask import dataframe as dd
+from dask.multiprocessing import get
+from multiprocessing import cpu_count
+nCores = cpu_count() - 1
 
 import re
 import sys
@@ -341,7 +344,11 @@ class VectorizeData(Dataset):
         self.df = pd.read_csv(df_path, error_bad_lines=False)
         self.df['body'] = self.df.body.apply(lambda x: x.strip())
         print('Indexing...')
-        self.df['bodyidx'] = self.df.body.apply(indexer)
+        self.df['bodyidx'] = dd.from_pandas(self.df,npartitions=nCores).\
+        map_partitions(
+          lambda dp : dp.apply(
+             lambda x : indexer(x.body),axis=1)).\
+        compute(get=get)
         print('Calculating lengths')
         self.df['lengths'] = self.df.bodyidx.apply(len)
 #         if calc_maxlen == True:
@@ -370,7 +377,7 @@ class VectorizeData(Dataset):
 # In[13]:
 
 
-ds = VectorizeData(file_name2)
+#ds = VectorizeData(file_name2)
 dtrain = VectorizeData(file_name)
 dtest = VectorizeData(file_name1)
 
@@ -467,9 +474,9 @@ for epoch in range(num_epochs):
 
         t.set_postfix(loss=loss.item())
         pred_idx = torch.max(pred, dim=1)[1]
-        print(y)
+        # print(y)
         print(pred_idx)
-        print('%%%%')
+        # print('%%%%')
 
         y_true_train += list(y.cpu().data.numpy())
         y_pred_train += list(pred_idx.cpu().data.numpy())
@@ -520,9 +527,9 @@ for we, w in zip(tt,tst_weights):
     loss = F.nll_loss(pred, y)
 
     pred_idx = torch.max(pred, dim=1)[1]
-    print(y)
+    # print(y)
     print(pred_idx)
-    print('####')
+    # print('####')
 
     y_true_test1 += list(y.cpu().data.numpy())
     y_pred_test1 += list(pred_idx.cpu().data.numpy())
