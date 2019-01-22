@@ -297,24 +297,25 @@ def indexer(s):
 #         else:
 #             vec.append(word2idx['_PAD'])
 #     return vec
-    embedding =infermodel.encode( str(s), bsize=1, tokenize=False, verbose=True)
-    sent_vec =[]
-    numw = 0
-    for w in embedding:
-        try:
-            if numw == 0:
-                sent_vec = w
-            else:
-                sent_vec = np.add(sent_vec, w)
-            numw+=1
-        except:
-            pass
-    v = np.asarray(sent_vec) / numw
-    #             print(v.shape)
-    #             print(v)
-    v=np.transpose(v)
-    #             print(v.shape)
-    return v
+	if str(s) != ''
+		embedding =infermodel.encode( str(s), bsize=1, tokenize=False, verbose=True)
+		sent_vec =[]
+		numw = 0
+		for w in embedding:
+		    try:
+		        if numw == 0:
+		            sent_vec = w
+		        else:
+		            sent_vec = np.add(sent_vec, w)
+		        numw+=1
+		    except:
+		        pass
+		v = np.asarray(sent_vec) / numw
+		#             print(v.shape)
+		#             print(v)
+		v=np.transpose(v)
+		#             print(v.shape)
+		return v
 
 
 # # User Vector - construction
