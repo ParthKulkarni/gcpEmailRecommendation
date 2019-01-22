@@ -30,10 +30,10 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 import spacy
 nlp = spacy.load("en")
 
-folder_path = "/home/niki/Documents/BE_Project/gcpEmailRecommendation/Scraping/mini_deb/*"
-sys.path.insert(0, '/home/niki/Documents/BE_Project/my_EmailRecommmendation/Preprocessing')
+folder_path = "/home/parth/BE_Project/my_EmailRecommmendation/Scraping/mini_deb/*"
+sys.path.insert(0, '/home/parth/BE_Project/my_EmailRecommmendation/Preprocessing')
 
-
+import pandas as pd
 import preprocessing
 import read_file
 import datetime
@@ -93,7 +93,7 @@ cnt = 0
 count_file = 0
 thread_list=[]
 try:
-    for fol in tqdm_notebook(folder):
+    for fol in folder:
         files = glob.glob(fol+'/*.txt')
         flag = 0
         t = ''
