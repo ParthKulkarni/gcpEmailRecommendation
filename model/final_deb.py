@@ -46,9 +46,9 @@ import codecs
 import warnings
 warnings.filterwarnings('ignore')
 
-BASE_PATH = '/home/nikkikokitkar/gcpEmailRecommendation'
-
-folder_path = "/home/nikkikokitkar/gcpEmailRecommendation/Scraping/debian_dataset/*"
+BASE_PATH = '/home/niki/gcpEmailRecommendation'
+doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
+folder_path = "/home/niki/gcpEmailRecommendation/Scraping/debian_dataset/*"
 file_name = BASE_PATH + "/model/dataframe3.csv"
 file_name1 = BASE_PATH + "/model/dataframe4.csv"
 file_name2 = BASE_PATH + "/model/dataframe5.csv"
@@ -58,6 +58,8 @@ PATH = BASE_PATH + '/model/first_model.pickle'
 import preprocessing
 import read_file
 import datetime
+
+torch.manual_seed(42)	
 
 def extract_debian(text):
     text = text.split('\n\n\n')
@@ -117,6 +119,7 @@ try:
 except:
     print(fol)
 print(len(thread_list))
+print(len(count_file))
 
 
 # In[6]:
@@ -231,10 +234,9 @@ word2idx = {o:i for i,o in enumerate(words)}
 idx2word = {i:o for i,o in enumerate(words)}
 
 def indexer(s):
-    modell="/home/nikkikokitkar/apnews_dbow/doc2vec.bin"
     start_alpha=0.01
     infer_epoch=1000
-    m = gensim.models.Doc2Vec.load(modell)
+    m = gensim.models.Doc2Vec.load(doc2vec_path)
     Document_vector = [x for x in m.infer_vector(s, alpha=start_alpha, steps=infer_epoch)]
     return Document_vector
 
@@ -381,6 +383,8 @@ class VectorizeData(Dataset):
 dtrain = VectorizeData(file_name)
 dtest = VectorizeData(file_name1)
 
+dtrain.df.to_csv('/home/niki/train.csv')
+
 
 # # Pytorch Feedforward Neural Network model
 
@@ -409,11 +413,16 @@ print(user_vec_len)
 class NeuralNet(nn.Module):
     def __init__(self, input_size, hidden_size,user_vec_len, num_classes):
         super(NeuralNet, self).__init__()
-        self.fc1 = nn.Linear(input_size + user_vec_len, hidden_size) 
+        self.fc1 = nn.Linear(input_size + user_vec_len, hidden_size)
+        nn.init.xavier_uniform_(self.fc1.weight,gain=nn.init.calculate_gain('relu'))
+        nn.init.constant_(self.fc1.bias,0)
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size,hidden_size)
+        nn.init.xavier_uniform_(self.fc2.weight,gain=nn.init.calculate_gain('relu'))
+        nn.init.constant_(self.fc2.bias,0)
         self.relu = nn.ReLU()
-        self.fc3 = nn.Linear(hidden_size, num_classes)  
+        self.fc3 = nn.Linear(hidden_size, num_classes)
+        self.logprob = nn.LogSoftmax(dim=1)  
     
     def forward(self, x,w):
 #         x = torch.FloatTensor(x)
@@ -423,8 +432,8 @@ class NeuralNet(nn.Module):
         out = self.fc2(out)
         out = self.relu(out)
         out = self.fc3(out)
+        out = self.logprob(out)
         return out
-
 
 # In[18]:
 
@@ -462,13 +471,14 @@ for epoch in range(num_epochs):
         y = Variable(y.cpu())
         lengths = lengths.numpy()
 
-        opt.zero_grad()
+        
         X = X.float()
         w = w.float()
         y = y.long()
         pred = model(X,w)
         # F.nll_loss can be replaced with criterion
         loss = F.nll_loss(pred, y)
+        opt.zero_grad()
         loss.backward()
         opt.step()
 
