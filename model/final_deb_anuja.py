@@ -40,9 +40,9 @@ import pickle
 import warnings
 warnings.filterwarnings('ignore')
 
-BASE_PATH = '/home/parth/BE_Project/my_EmailRecommmendation'
+BASE_PATH = '/home/parth/gcpEmailRecommendation'
 
-folder_path = "/home/parth/BE_Project/my_EmailRecommmendation/Scraping/mini_deb/*"
+folder_path = "/home/parth/gcpEmailRecommendation/Scraping/debian_dataset/*"
 file_name = BASE_PATH + "/model/dataframe3.csv"
 file_name1 = BASE_PATH + "/model/dataframe4.csv"
 file_name2 = BASE_PATH + "/model/dataframe5.csv"
@@ -121,14 +121,14 @@ import numpy as np
 import torch
 from models import InferSent
 model_version = 1
-MODEL_PATH = "/home/parth/BE_Project/InferSent/infersent1.pkl"
+MODEL_PATH = "/home/parth/encoder/infersent1.pkl"
 params_model = {'bsize': 64, 'word_emb_dim': 300, 'enc_lstm_dim': 2048,
                 'pool_type': 'max', 'dpout_model': 0.0, 'version': model_version}
 infermodel = InferSent(params_model)
 infermodel.load_state_dict(torch.load(MODEL_PATH))
 use_cuda = False
 infermodel = infermodel.cuda() if use_cuda else infermodel
-W2V_PATH = '/home/parth/BE_Project/glove.6B/glove.6B.300d.txt'
+W2V_PATH = '/home/parth/dataset/GloVe/glove.840B.300d.txt'
 #replace with glove.840B.300d.txt
 infermodel.set_w2v_path(W2V_PATH)
 infermodel.build_vocab_k_words(K=100000)
@@ -139,7 +139,7 @@ infermodel.build_vocab_k_words(K=100000)
 
 df_trn = pd.DataFrame()
 df_tst = pd.DataFrame()
-split_date = datetime.datetime.strptime('01 Sep 2017 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
+split_date = datetime.datetime.strptime('01 Sep 2018 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
 users = []
 dates  = []
