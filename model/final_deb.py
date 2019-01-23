@@ -120,7 +120,7 @@ except:
     print(fol)
     print(file)
 print(len(thread_list))
-print(len(count_file))
+print(count_file)
 
 
 # In[6]:
@@ -128,7 +128,7 @@ print(len(count_file))
 
 df_trn = pd.DataFrame()
 df_tst = pd.DataFrame()
-split_date = datetime.datetime.strptime('01 Sep 2017 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
+split_date = datetime.datetime.strptime('01 Sep 2018 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
 users = []
 dates  = []
@@ -239,6 +239,7 @@ def indexer(s):
     infer_epoch=1000
     m = gensim.models.Doc2Vec.load(doc2vec_path)
     Document_vector = [x for x in m.infer_vector(s, alpha=start_alpha, steps=infer_epoch)]
+    print(Document_vector)
     return Document_vector
 
 
