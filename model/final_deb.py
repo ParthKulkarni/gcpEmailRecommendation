@@ -114,7 +114,7 @@ try:
             ob.read_file_content()
             threads.append(ob.mail)
             count_file += 1
-        sorted_threads = sorted(threads, key=lambda ke: datetime.datetime.strptime(ke['Date'],'%a, %d %b %Y %H:%M:%S %z'))
+        sorted_threads = sorted(threads, key=lambda ke: datetime.datetime.strptime(ke['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z'))
         thread_list.append(sorted_threads)
 except:
     print(fol)
