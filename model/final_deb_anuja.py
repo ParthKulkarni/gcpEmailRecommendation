@@ -106,7 +106,7 @@ try:
             ob.read_file_content()
             threads.append(ob.mail)
             count_file += 1
-        sorted_threads = sorted(threads, key=lambda ke: datetime.datetime.strptime(ke['Date'],'%a, %d %b %Y %H:%M:%S %z'))
+        sorted_threads = sorted(threads, key=lambda ke: datetime.datetime.strptime(ke['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z'))
         thread_list.append(sorted_threads)
 except:
     print(fol)
@@ -186,7 +186,7 @@ for thr in thread_list:
 #         #             print(v.shape)
 #             print(v)
         if flag==0:
-            start_date = datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z')
+            start_date = datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')
             if start_date > split_date:
                 #print(temp)
                 df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
@@ -201,15 +201,15 @@ for thr in thread_list:
             continue
 
         
-        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
 
         if start_date <= split_date:
             t = t + temp
-            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
             #trn_users.append(sender)
             #trn_dates.append(datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z'))
         else:
-            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
             #tst_users.append(sender)
             #tst_dates.append(datetime.datetime.strptime(mail['Date'],'%a, %d %b %Y %H:%M:%S %z'))
 
@@ -363,6 +363,7 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
     array  = np.zeros(user_vec_len)
     if temp_index < df_trn.thread_no.shape[0]:
         for j in range(temp_index, temp_index + list(df_trn.thread_no).count(thread_no_list[temp_index])):
+            decay_value = 1
             if j>temp_index:
                 cur_date = trn_dates[j].to_pydatetime()
                 date_diff = cur_date - thread_start_date
@@ -370,7 +371,7 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
                 print(str(total_seconds/3600))
                 decay_value = math.exp(-(total_seconds)/3600)
                 print(str(decay_value))
-            array[trn_user_indices[j]] = 1*decay_value
+            array[trn_user_indices[j]] = 1
             weight_list.append(list(array))
             indexx+=1
 
@@ -397,6 +398,7 @@ for i in range(0, len(df_tst.groupby("thread_no"))):
     array  = np.zeros(user_vec_len)
     if temp_index < df_tst.thread_no.shape[0]:
         for j in range(temp_index, temp_index + list(df_tst.thread_no).count(thread_no_list[temp_index])):
+            decay_value = 1
             if j>temp_index:
                 cur_date = tst_dates[j].to_pydatetime()
                 date_diff = cur_date - thread_start_date
@@ -404,7 +406,7 @@ for i in range(0, len(df_tst.groupby("thread_no"))):
                 print(str(total_seconds/3600))
                 decay_value = math.exp(-(total_seconds/3600))
                 print(str(decay_value))
-            array[tst_user_indices[j]] = 1*decay_value
+            array[tst_user_indices[j]] = 1
             weight_list.append(list(array))
             indexx+=1
 
@@ -470,7 +472,7 @@ hidden_size = 50
 num_classes = user_vec_len
 num_epochs = 5
 batch_size = 1
-learning_rate = 0.001
+learning_rate = 0.0001
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
