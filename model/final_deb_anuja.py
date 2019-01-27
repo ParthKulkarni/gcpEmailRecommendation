@@ -4,7 +4,10 @@
 # # Preprocessing, building a Pandas dataframe and saving it as a  .csv file
 
 # In[194]:
-
+from dask import dataframe as dd
+from dask.multiprocessing import get
+from multiprocessing import cpu_count
+nCores = cpu_count() - 1
 
 import re
 import sys
@@ -425,7 +428,12 @@ class VectorizeData(Dataset):
         self.df = pd.read_csv(df_path, error_bad_lines=False)
         self.df['body'] = self.df.body.apply(lambda x: x.strip())
         print('Indexing...')
-        self.df['bodyidx'] = self.df.body.apply(indexer)
+        #self.df['bodyidx'] = self.df.body.apply(indexer)
+        self.df['bodyidx'] = dd.from_pandas(self.df,npartitions=nCores).\
+        map_partitions(
+          lambda dp : dp.apply(
+             lambda x : indexer(x.body),axis=1)).\
+        compute(get=get)
         #print('Calculating lengths')
         #self.df['lengths'] = self.df.bodyidx.apply(len)
         #if calc_maxlen == True:
