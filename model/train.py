@@ -46,6 +46,8 @@ torch.manual_seed(42)
 # In[16]:
 TRAIN_PATH = '/home/niki/train.pkl'
 USER_TRAIN = '/home/niki/user_weights.npy'
+BASE_PATH = '/home/niki'
+PATH = BASE_PATH + '/first_model.pt'
 
 user_vec_len = 800
 
@@ -194,7 +196,7 @@ for epoch in range(num_epochs):
     train_acc = accuracy_score(y_true_train, y_pred_train)
     train_loss = total_loss_train/len(train_dl)
     print(f' Epoch {epoch}: Train loss: {train_loss} acc: {train_acc}')
-# torch.save(model.state_dict(),PATH)
+torch.save(model.state_dict(),PATH)
 
 # architecture 
 # loading pickle file and predict

@@ -42,6 +42,9 @@ import warnings
 warnings.filterwarnings('ignore')
 torch.manual_seed(42)
 
+BASE_PATH = '/home/niki'
+PATH = BASE_PATH + '/first_model.pt'
+
 TEST_PATH  = '/home/niki/test.pkl'
 USER_TEST  = '/home/niki/user_weights_test.npy'
 
@@ -136,8 +139,10 @@ class NeuralNet(nn.Module):
 
 model = NeuralNet(input_size, hidden_size,user_vec_len, num_classes).to(device)
 # Loss and optimizer
-criterion = nn.CrossEntropyLoss()
-opt = torch.optim.Adam(model.parameters(), lr=learning_rate) 
+# criterion = nn.CrossEntropyLoss()
+# opt = torch.optim.Adam(model.parameters(), lr=learning_rate) 
+model.load_state_dict(torch.load(PATH))
+model.eval()
 
 
 # In[11]:
