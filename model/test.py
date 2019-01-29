@@ -51,7 +51,7 @@ USER_TEST  = '/home/niki/user_weights_test.npy'
 # In[2]:
 
 
-user_vec_len = 49
+user_vec_len = 800
 
 
 # In[5]:

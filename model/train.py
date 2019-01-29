@@ -49,7 +49,7 @@ USER_TRAIN = '/home/niki/user_weights.npy'
 BASE_PATH = '/home/niki'
 PATH = BASE_PATH + '/first_model.pt'
 
-user_vec_len = 49
+user_vec_len = 800
 
 
 # In[2]:
@@ -96,7 +96,7 @@ dtrain = VectorizeData(TRAIN_PATH)
 input_size = 300
 hidden_size = 50
 num_classes = user_vec_len
-num_epochs = 5
+num_epochs = 20 
 batch_size = 1
 learning_rate = 0.0001
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

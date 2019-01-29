@@ -38,6 +38,8 @@ from torch.utils.data import Dataset, DataLoader
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torch.autograd import Variable
 
+from pymagnitude import *
+
 import pickle
 
 import warnings
@@ -51,6 +53,7 @@ file_name1 = BASE_PATH + "/model/dataframe4.csv"
 file_name2 = BASE_PATH + "/model/dataframe5.csv"
 sys.path.insert(0, BASE_PATH + '/Preprocessing')
 PATH = BASE_PATH + '/model/first_model.pt'
+vectors = Magnitude('/home/parth/elmo_2x4096_512_2048cnn_2xhighway_5.5B_weights_GoogleNews_vocab.magnitude')
 
 import preprocessing
 import read_file
@@ -292,6 +295,22 @@ word2idx = {o:i for i,o in enumerate(words)}
 idx2word = {i:o for i,o in enumerate(words)}
 
 def indexer(s):
+
+	s = s.strip(' ')
+
+	count = 0
+	embedding = []
+	for word in s:
+		temp = vectors.query(word)
+		embedding = np.add(embedding, temp)
+		count+=1
+	v = np.asarray(embedding) / count
+
+	print(v.shape)
+	print(v)
+
+	return v
+
 #     vec = []
 #     for wr in nlp(s):
 #         wr = wr.text.lower()
@@ -300,25 +319,25 @@ def indexer(s):
 #         else:
 #             vec.append(word2idx['_PAD'])
 #     return vec
-	if str(s) != '':
-	    embedding =infermodel.encode( str(s), bsize=1, tokenize=False, verbose=True)
-	    sent_vec =[]
-	    numw = 0
-	    for w in embedding:
-	        try:
-	            if numw == 0:
-	                sent_vec = w
-	            else:
-	                sent_vec = np.add(sent_vec, w)
-	            numw+=1
-	        except:
-	            pass
-	    v = np.asarray(sent_vec) / numw
-	    #             print(v.shape)
-	    #             print(v)
-	    v=np.transpose(v)
-	    #             print(v.shape)
-	    return v
+	# if str(s) != '':
+	#     embedding =infermodel.encode( str(s), bsize=1, tokenize=False, verbose=True)
+	#     sent_vec =[]
+	#     numw = 0
+	#     for w in embedding:
+	#         try:
+	#             if numw == 0:
+	#                 sent_vec = w
+	#             else:
+	#                 sent_vec = np.add(sent_vec, w)
+	#             numw+=1
+	#         except:
+	#             pass
+	#     v = np.asarray(sent_vec) / numw
+	#     #             print(v.shape)
+	#     #             print(v)
+	#     v=np.transpose(v)
+	#     #             print(v.shape)
+	#     return v
 
 
 # # User Vector - construction
