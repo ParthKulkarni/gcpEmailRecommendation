@@ -181,7 +181,7 @@ for we, w in zip(tt,tst_weights):
     pred_idx = torch.max(pred, dim=1)[1]
 
 	pred = pred.sort()
-    array = pred[1][0][-6:]
+    array = pred[1][0][-5:]
     if y in array:
     	hit += 1
 
