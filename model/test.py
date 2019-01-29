@@ -153,10 +153,9 @@ num_batches = len(test_dl)
 y_true_test1 = list()
 y_pred_test1 = list()
 total_loss_test = 0
-wer = 0
+hit = 0
 tt = tqdm_notebook(iter(test_dl), leave=False, total=num_batches)
 for we, w in zip(tt,tst_weights):
-    wer += 1
     X = we[0]
     y = we[1]
     lengths = we[2]
@@ -181,7 +180,10 @@ for we, w in zip(tt,tst_weights):
 
     pred_idx = torch.max(pred, dim=1)[1]
 
-    print(pred_idx)
+	pred = pred.sort()
+    array = pred[1][0][-6:]
+    if y in array:
+    	hit += 1
 
 
     y_true_test1 += list(y.cpu().data.numpy())
@@ -189,8 +191,9 @@ for we, w in zip(tt,tst_weights):
     print(loss.item())
     total_loss_test += loss.item()
 
+accuracy = float(hit)/float(len(train_dl))
 train_acc = accuracy_score(y_true_test1, y_pred_test1)
 train_loss = total_loss_test/len(test_dl)
-print(f'Train loss: {train_loss} acc: {train_acc}')
-print(wer)
+print(f'Test loss: {train_loss} acc: {train_acc}')
+print('Accuracy : ',accuracy)
 

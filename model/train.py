@@ -147,6 +147,7 @@ opt = torch.optim.Adam(model.parameters(), lr=learning_rate)
 train_dl= DataLoader(dtrain, batch_size=1)
 num_batch = len(train_dl)
 for epoch in range(num_epochs):
+	hit = 0
     y_true_train = list()
     y_pred_train = list()
     total_loss_train = 0
@@ -181,21 +182,19 @@ for epoch in range(num_epochs):
         t.set_postfix(loss=loss.item())
         pred_idx = torch.max(pred, dim=1)[1]
         pred = pred.sort()
-        import pprint
         array = pred[1][0][-6:]
-#         print(array)
-#         print(y)
-        print(pred_idx)
-#         print('%%%%')
+        if y in array:
+        	hit += 1
 
         y_true_train += list(y.cpu().data.numpy())
         y_pred_train += list(pred_idx.cpu().data.numpy())
         total_loss_train += loss.item()
         
-
+    accuracy = float(hit)/float(len(train_dl))
     train_acc = accuracy_score(y_true_train, y_pred_train)
     train_loss = total_loss_train/len(train_dl)
     print(f' Epoch {epoch}: Train loss: {train_loss} acc: {train_acc}')
+    print('Accuracy : ',accuracy)
 torch.save(model.state_dict(),PATH)
 
 # architecture 
