@@ -72,13 +72,13 @@ class VectorizeData(Dataset):
         
     def __len__(self):
         return self.df.shape[0]
-    
+
     def __getitem__(self, idx):
         X = self.df.bodyidx[idx]
         lens = self.df.lengths[idx]
         y = self.df.int_replier[idx]
         return X,y,lens
-    
+
     def pad_data(self, s):
         padded = np.zeros((self.maxlen,), dtype=np.int64)
         if len(s) > self.maxlen: padded[:] = s[:self.maxlen]
@@ -159,10 +159,10 @@ for we, w in zip(tt,tst_weights):
     X = we[0]
     y = we[1]
     lengths = we[2]
-    
+
     w = w.reshape(-1,1)
     w = w.transpose()
-    
+
     X = np.array(X)
     X = X.reshape(-1,1)
     X = X.transpose()
@@ -194,6 +194,7 @@ for we, w in zip(tt,tst_weights):
 accuracy = float(hit)/float(len(test_dl))
 train_acc = accuracy_score(y_true_test1, y_pred_test1)
 train_loss = total_loss_test/len(test_dl)
-print(f'Test loss: {train_loss} acc: {train_acc}')
+print(f'Test loss: {train_loss}')
 print('Accuracy : ',accuracy)
+print('\n')
 
