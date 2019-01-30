@@ -167,7 +167,8 @@ vile.close()
 tile = open('hist.txt','w')
 sd = qw.groupby(['counts']).size()
 for idx,vall in zip(sd.index,sd):
-    tile.write(f'{idx}\t{vall}')
+    rt = f'{idx}\t{vall}\n'
+    tile.write(rt)
 tile.close()
 plt.hist(qw['counts'],bins= 50,color='red')
 plt.ylabel('Number of Users')
