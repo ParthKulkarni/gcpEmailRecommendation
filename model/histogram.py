@@ -158,8 +158,13 @@ print(len(df['replier'].unique()))
 
 # In[3]:
 
-tile = open('hist.txt','w')
+
 qw = df.groupby(['replier']).size().reset_index(name='counts')
+vile = open('users.txt','w')
+with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+    vile.write(f'{qw}\n')
+vile.close()
+tile = open('hist.txt','w')
 sd = qw.groupby(['counts']).size()
 for idx,vall in zip(sd.index,sd):
     tile.write(f'{idx}\t{vall}')
