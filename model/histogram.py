@@ -119,16 +119,11 @@ print(count_file)
 # In[2]:
 
 
-df_trn = pd.DataFrame()
-df_tst = pd.DataFrame()
+
 split_date = datetime.datetime.strptime('01 Sep 2017 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
 users = []
 dates  = []
-trn_dates = []
-tst_dates = []
-trn_users = []
-tst_users = []
 th_no = 0
 cnt = 0
 for thr in thread_list:
@@ -147,69 +142,19 @@ for thr in thread_list:
             continue
         users.append(sender)
         
-        temp = obj.replace_tokens(temp)
-        if flag==0:
-            start_date = datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')
-            if start_date > split_date:
-                df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
-            else:
-                df_trn = df_trn.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
-            t = temp
-            flag = 1
-            continue
-
+        temp = obj.replace_tokens(temp)    
 
         df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
-        
-        if start_date <= split_date:
-            t = t + temp
-            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
-        else:
-            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)       
+              
     th_no += 1
 
-#trn_users = list(df_trn.groupby("thread_no", as_index=False)['replier'].apply(lambda x: x.iloc[:-1]))
-#tst_users = list(df_tst.groupby("thread_no", as_index=False)['replier'].apply(lambda x: x.iloc[:-1]))
-#trn_dates = list(df_trn.groupby("thread_no", as_index=False)['cur_date'].apply(lambda x: x.iloc[:-1]))
-#tst_dates = list(df_tst.groupby("thread_no", as_index=False)['cur_date'].apply(lambda x: x.iloc[:-1]))
+
 
 print(cnt)
 print(count_file)
 print(len(df['body']))
 print(len(df['thread_no'].unique()))
 print(len(df['replier'].unique()))
-rep_to_index = {}
-index = 0
-for rep in users:
-    if rep_to_index.get(rep, 0) == 0:
-        rep_to_index[rep] = index
-        index += 1
-#pprint(rep_to_index)
-
-
-for rep in df_trn['replier']:
-    df_trn.loc[df_trn['replier']==rep,'int_replier'] = rep_to_index[rep]
-#print(df_trn.head)    
-
-for rep in df_tst['replier']:
-    df_tst.loc[df_tst['replier']==rep,'int_replier'] = rep_to_index[rep]
-
-for rep in df['replier']:
-    df.loc[df['replier']==rep,'int_replier'] = rep_to_index[rep]
-    
-df_tst['replier'] = df_tst.groupby('thread_no')['replier'].shift(-1)
-df_tst['int_replier'] = df_tst.groupby('thread_no')['int_replier'].shift(-1)
-
-df_trn['replier'] = df_trn.groupby('thread_no')['replier'].shift(-1)
-df_trn['int_replier'] = df_trn.groupby('thread_no')['int_replier'].shift(-1)
-
-df_tst.dropna(inplace=True)
-df_trn.dropna(inplace=True)
-
-df_trn.to_csv(file_name)
-df_tst.to_csv(file_name1)
-df.to_csv(file_name2)
-
 
 # In[3]:
 
