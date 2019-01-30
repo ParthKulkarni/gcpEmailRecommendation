@@ -215,11 +215,13 @@ df.to_csv(file_name2)
 
 tile = open('hist.txt','w')
 qw = df.groupby(['replier']).size().reset_index(name='counts')
-tile.write(str(qw.groupby(['counts']).size()))
+sd = qw.groupby(['counts']).size()
+for idx,vall in zip(sd.index,sd):
+    tile.write(f'{idx}\t{vall}')
 tile.close()
 plt.hist(qw['counts'],bins= 50,color='red')
-plt.ylabel('Frequency')
-plt.xlabel('User')
+plt.ylabel('Number of Users')
+plt.xlabel('Frequency')
 #plt.show()
 plt.savefig('myfig.png')
 
