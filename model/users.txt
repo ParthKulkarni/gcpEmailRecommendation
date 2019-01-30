@@ -1,0 +1,800 @@
+                                               replier  counts
+322                                        Ian Jackson     475
+186                                    Cyril Brulebois     444
+314                                     Holger Wansing     354
+553                                          Paul Wise     325
+49                                       Adam Borowski     281
+312                                      Holger Levsen     264
+100                                 Andrey Rahmatullin     233
+633                                       Sean Whitton     229
+132                                      Ben Hutchings     208
+614                                       Russ Allbery     206
+665                                     Steve McIntyre     202
+645                                     Simon McVittie     186
+76                                      Alexander Wirt     177
+625                                    Samuel Thibault     167
+568                                       Philipp Kern     158
+92                                       Andreas Tille     156
+364                                   Jonathan Dowland     135
+165                                         Chris Lamb     132
+484                                      Michael Biebl     129
+271                                     Geert Stappers     126
+308                                      Hideki Yamane     123
+361                                   Jonas Smedegaard     119
+52                                         Adrian Bunk     118
+582                                    Raphael Hertzog     118
+735                                    Wouter Verhelst     113
+358                          John Paul Adrian Glaubitz     103
+572                                     Pirate Praveen     102
+346                                       Jeremy Bicha      99
+565                                       Philip Hands      95
+472                                     Mattia Rizzolo      95
+282                                      Guillem Jover      93
+693                                     Thomas Goirand      89
+1                                    "Adam D. Barratt"      87
+184                                       Colin Watson      85
+495                                      Michael Stone      83
+104                                   Ansgar Burchardt      82
+523                                      Niels Thykier      79
+239                             Emilio Pozuelo Monfort      79
+126                                      Bastian Blank      77
+321                                       Ian Campbell      74
+549                                        Paul Gevers      72
+630                                    Scott Kitterman      69
+439                                         Marc Haber      62
+381                                Julian Andres Klode      59
+40                                 "W. Martin Borgert"      58
+760                                    gregor herrmann      56
+525                                      Nikolaus Rath      56
+172                                   Christian Seiler      56
+384                                     Julien Cristau      53
+304                        Henrique de Moraes Holschuh      52
+174                                    Christoph Biedl      51
+354                                      Joerg Jaspert      51
+130                                         Ben Finney      51
+790                                      shirish शिरीष      51
+654                                     Stefan Fritsch      49
+414                                     Lars Wirzenius      48
+708                                    Tollef Fog Heen      47
+223                                     Dominik George      46
+725                                     Vincent Bernat      45
+284                                        Gunnar Wolf      44
+533                                      Ole Streicher      43
+127                                  Bastien ROUCARIES      41
+398                                     Karsten Merker      41
+720                                  Vagrant Cascadian      40
+215                                Dimitri John Ledkov      40
+356                                   Johannes Schauer      39
+375                                     Joseph Herlant      39
+444                                       Marco d'Itri      38
+489                                     Michael Meskes      38
+225                                      Don Armstrong      37
+376                                      Josh Triplett      37
+107                                    Antoine Beaupré      36
+772    lsorense@csclub.uwaterloo.ca (Lennart Sorensen)      36
+605                                      Roger Shimizu      36
+707                                       Tobias Frost      36
+15                  "Enrico Weigelt, metux IT consult"      36
+468                                     Matthias Klose      35
+776                         md@Linux.IT (Marco d'Itri)      35
+664                                     Steve Langasek      34
+213                               Didier 'OdyX' Raboud      32
+635                          Sebastian Andrzej Siewior      32
+509                                  Moritz Mühlenhoff      31
+199                                   Daniele Nicolodi      31
+734                                             Wookey      31
+455                                 Martin Steigerwald      31
+64                                         Alec Leamas      30
+459                                  Mathieu Malaterre      30
+197                                      Daniel Pocock      30
+499                                       Mike Gabriel      30
+109                                     Anton Zinoviev      29
+258                                     Florian Weimer      29
+272                                      Georg Faerber      28
+110                                   Antonio Terceiro      28
+216                                  Dirk Eddelbuettel      28
+690                                    Thibaut Paumard      28
+170                                  Christian PERRIER      28
+688                                       The Wanderer      27
+602                                 Roberto C. Sánchez      27
+656                                     Steffen Möller      27
+457                                      Marvin Renich      27
+144                                        Boyuan Yang      27
+347                                     Jeremy Stanley      26
+514                                 Nicholas D Steeves      26
+360                                       Jonas Meurer      26
+415                                 Laura Arjona Reina      26
+224                                   Dominique Dumont      25
+333                                       James Clarke      25
+242                                        Enrico Zini      25
+88                                  Andreas Henriksson      25
+157                                  Carsten Schoenert      25
+736                                             Xavier      25
+152                         Carlos Alberto Lopez Perez      24
+469                                    Matthias Klumpp      24
+678                                       Sven Joachim      24
+280                                      Guido Günther      24
+729                                    Vincent Lefevre      23
+147                                       Brian Potkin      22
+667                                 Steven Chamberlain      22
+647                                      Simon Richter      22
+616                                     Russell Stuart      22
+528                                   Norbert Preining      21
+494                                 Michael Stapelberg      21
+669                                    Stuart Prescott      21
+335                                        James McCoy      21
+559                                    Peter Palfrader      21
+425                Lisandro Damián Nicanor Pérez Meyer      21
+303                                      Helmut Grohne      21
+141                                         Bjørn Mork      20
+580                                       Ralf Treinen      20
+674                                     Svante Signell      20
+694                                       Thomas Lange      20
+25                     "Manuel A. Fernandez Montecelo"      20
+541                                         Osamu Aoki      20
+285                                       Guus Sliepen      19
+328                                       Ivan Shmakov      19
+12                                    "Dr. Bas Wijnen"      18
+762                            gwmfms6@openmailbox.org      18
+453                                   Martin Michlmayr      18
+163                                         Chris Boot      18
+627                                      Santiago Vila      18
+507                                            Mo Zhou      18
+596                                  Ritesh Raj Sarraf      18
+405                                      Kumar Appaiah      18
+251                                   Fabiano Fidêncio      18
+0                                                           17
+117                                     Aurelien Jarno      17
+764                                          intrigeri      17
+69                                   Alex Mestiashvili      17
+105                                 Anthony DeRobertis      17
+278                                       Graham Inggs      16
+752                                        bret curtis      16
+642                                      Shengjing Zhu      16
+408                                       Kyle Edwards      16
+203                                 David Kalnischkies      16
+319                    IOhannes m zmölnig (Debian/GNU)      16
+90                                     Andreas Metzler      16
+60                                  Alastair McKinstry      15
+80                                      Alexandre Viau      15
+368                                 Jonathan Wiltshire      15
+593                                     Richard Owlett      15
+727                                    Vincent Danjean      15
+129                                 Ben Caradoc-Davies      15
+252                                     Felipe Sateler      15
+770                kjonca@poczta.onet.pl (Kamil Jońca)      15
+299                                Heinrich Schuchardt      15
+448                                    Markus Koschany      15
+70                                        Alex Muntada      14
+275                                  Ghislain Vaillant      14
+359                                   Johnny Willemsen      14
+658                                      Stephan Seitz      14
+747                                  Yves-Alexis Perez      14
+305                                     Herbert Fortes      14
+202                                      David Bremner      14
+666                                      Steve Robbins      14
+19                                 "Gautas pranešimas"      14
+698                                    Thorsten Glaser      14
+712                                  Tommi Höynälänmaa      14
+140                                     Bill Allombert      14
+458                                     Mathias Behrle      14
+114                            Arturo Borrero Gonzalez      14
+134                                     Benjamin Drung      14
+95                                      Andrej Shadura      14
+385                                 Juliusz Chroboczek      13
+730                                   Vincent McIntyre      13
+334                                      James Cowgill      13
+248                                       Evgeni Golov      13
+713                                       Toni Mueller      13
+488                                  Michael Lustfield      13
+274                                        Gert Wollny      13
+570                               Pierre-Elliott Bécue      13
+373                                           Jose R R      13
+139                                   Bernhard Schmidt      13
+594                                        Rick Thomas      13
+543                            PICCA Frederic-Emmanuel      13
+311                                      Hleb Valoshka      12
+38                                  "Theodore Y. Ts'o"      12
+309                                       Hilko Bengen      12
+681                                 Sébastien Villemot      12
+164                                       Chris Knadle      12
+423                                     Lionel Debroux      12
+396                                      Kari Tanninen      12
+146                                          Brian May      12
+502                                       Mike Mestnik      12
+657                                   Steffen Nurpmeso      12
+36                                    "Robert J. Clay"      12
+22                     "Jonathan Carter (highvoltage)"      12
+289                                               Hans      12
+634                              Sebastiaan Couwenberg      12
+377                                        Josua Mayer      12
+701                                       Tianon Gravi      12
+427                                      Luca Boccassi      11
+222                                 Dominic Hargreaves      11
+501                                        Mike Hommey      11
+466                                     Matthew Vernon      11
+123                                    Baptiste Jammet      11
+622                                          Sam Kuper      11
+195                                Daniel Kahn Gillmor      11
+82                                           Alf Gaida      11
+211                                     Denys Vlasenko      11
+407                                        Kurt Roeckx      11
+479                                       Mehdi Dogguy      10
+567                                       Philipp Hahn      10
+97                                      Andrew Shadura      10
+397                                    Karsten Hilbert      10
+128                                  Bastien Roucaries      10
+746                                        Yuri Gribov      10
+777                                   nobrin@gmail.com      10
+62                                      Alberto Luaces      10
+317                              Héctor Romojaro Gómez      10
+761                                    gustavo panizzo      10
+342                                               Jeff      10
+54                                      Afif Elghraoui      10
+253                                        Felix Miata      10
+325                                      Inaki Malerba      10
+689                                      Theodore Ts'o      10
+218                                     Dmitry Bogatov      10
+695                                      Thomas Nyberg      10
+198                                    Daniel Reichelt      10
+779  owner@bugs.debian.org (Debian Bug Tracking Sys...       9
+315                                      Hugh McMaster       9
+631                                      Scott Leggett       9
+750                                     andrew glaeser       9
+524                                          Niko Tyni       9
+552                                   Paul Tagliamonte       9
+539                                        Ondřej Surý       9
+711                                     Tomas Pospisek       9
+641                                        Seth Arnold       9
+798                                殷啟聰 | Kai-Chung Yan       9
+180                                        Clint Byrum       9
+137                                      Bernd Zeimetz       9
+610                                    Ross Vandegrift       8
+138                                           Bernhard       8
+561                                        Peter Silva       8
+365                                  Jonathan McDowell       8
+717                                       Ulrike Uhlig       8
+219                            Dmitry Eremin-Solenikov       8
+220                                     Dmitry Smirnov       8
+352                                         Joel Cross       8
+442                                      Marcin Kulisz       8
+748                                     Zlatan Todoric       8
+307                                      Hermann Lauer       8
+450                             Martin Bagge / brother       8
+133                                           Benda Xu       8
+451                                       Martin Dosch       8
+124                                       Barry Warsaw       8
+548                                  Patrick Schleizer       8
+339                                         Jari Ruusu       8
+149                                   Bruno Bierbaumer       8
+259                                     Francesco Poli       8
+191                                         Dan Norton       8
+492                                     Michael Shuler       8
+591                                    Richard Fontana       8
+331                                        Jacob Adams       8
+569                                     Pierre Couderc       8
+774                                    martin f krafft       8
+262                   Francisco Vilmar Cardoso Ruviaro       8
+766                                         jhcha54008       8
+181                                    Clément Hermann       8
+326                                 Innocent De Marchi       8
+454                                        Martin Pitt       7
+520                              Nicolas Braud-Santoni       7
+363                                    Jonathan Carter       7
+156                                  Carsten Leonhardt       7
+119                                       Axel Beckert       7
+209                                 Debian FTP Masters       7
+366                                    Jonathan Nieder       7
+716                                      Tzafrir Cohen       7
+621                               Salvatore Bonaccorso       7
+430                                     Luca Filipozzi       7
+745                                        YunQiang Su       7
+478                                          Mechtilde       6
+416                                 Laurent Bigonville       6
+560                                     Peter Pentchev       6
+590                              Riccardo Gagliarducci       6
+378                                     Joël Krähemann       6
+148                                      Britton Kerin       6
+546                                    Paride Legovini       6
+332                                         Jakub Wilk       6
+320                                     Iain Learmonth       6
+48                                    Abou Al Montacir       6
+61                                      Alberto Garcia       6
+739                                          Ximin Luo       6
+428                                       Luca Capello       6
+535                                     Olivier Berger       6
+9                                       "Boylan, Ross"       6
+436                                     Luke W Faraone       6
+4                                   "Andreas B. Mundt"       6
+401                                                Ken       6
+268                                   Frédéric Bonnard       6
+16                            "Francesco P. Lovergine"       6
+241                                    Emmanuel Kasper       6
+456                                     Martín Ferrari       6
+743                                            Yao Wei       6
+437                                              Lumin       6
+780                                  permondes - sagen       6
+173                                     Christoph Berg       6
+505                                        Miriam Ruiz       6
+122                                      Balint Reczey       6
+544                                         Pali Rohár       6
+250                                   Fabian Greffrath       6
+349                                      Jerome BENOIT       6
+155                   Carsten Haitzler (The Rasterman)       6
+578                                      Rainer Dorsch       6
+389                                  Jörg Frings-Fürst       6
+662                                       Steve Cotton       6
+387                                         Jérémy Lal       6
+7                                         "Art Cancro"       6
+508                                 Moritz Muehlenhoff       5
+563                                Petter Reinholdtsen       5
+190                                      Dan Nicholson       5
+338                                          Jan Rafaj       5
+355                                          Joey Hess       5
+200                                     Dashamir Hoxha       5
+487                                     Michael Kesper       5
+638                                  Sebastian Schmidt       5
+302                                       Helge Deller       5
+429                                     Luca Falavigna       5
+277                                       Gilles MOREL       5
+710                                              Tom H       5
+176                               Christopher Clements       5
+697                                  Thorsten Alteholz       5
+393                                    KAction@gnu.org       5
+87                                        Andre Heider       5
+660                                       Stephen Kitt       5
+256                                    Filippo Rusconi       5
+438                              MENGUAL Jean-Philippe       5
+5                                  "Andrew M.A. Cater"       5
+637                                  Sebastian Reichel       5
+68                                           Alex King       5
+619                                                 ST       5
+81                                       Alexey Salmin       5
+595                                        Riku Voipio       5
+86                                  Ana Guerrero Lopez       5
+592                                     Richard Hector       5
+161                                     Chow Loong Jin       4
+426                                      Loys Ollivier       4
+485                                    Michael Gilbert       4
+446                                       Mark Hindley       4
+158                               ChangZhuo Chen (陳昌倬)       4
+151                                       Carl Karsten       4
+125                                     Bas Couwenberg       4
+145                                              Brian       4
+247                                      Eugene Zhukov       4
+587                                     Rene Engelhard       4
+534                                    Oliver Riesener       4
+57                                      Akash mazumder       4
+53                                        Adrien CLERC       4
+671                                   Stéphane Blondon       4
+672                                    Stéphane Glondu       4
+679                                       Sven Mueller       4
+687                      Thadeu Lima de Souza Cascardo       4
+692                                      Thomas Girard       4
+41                           "Ying-Chun Liu (PaulLiu)"       4
+34                                 "Rebecca N. Palmer"       4
+703                                         Tim Rühsen       4
+714                                      Tony Godshall       4
+723                                      Victor Porton       4
+20                                 "Iain R. Learmonth"       4
+749                                 adri Orjales Vidal       4
+753                                                 bw       4
+8                                 "Asavaseri Natnaree"       4
+765                                           jg@wn.de       4
+767                                           john doe       4
+768                                             ju xor       4
+781                                        peter green       4
+663                                         Steve Kemp       4
+651                                   Sotirios Vrachas       4
+536                                   Olliver Schinagl       4
+649                                            Solveig       4
+538                                      OndÅ™ej SurÃ½       4
+111                                            Aron Xu       4
+108                                       Anton Gladky       4
+545                                       Paolo Greppi       4
+102                                      Andy Simpkins       4
+555                                     Pavlo Solntsev       4
+566                                       Philip Iezzi       4
+91                                     Andreas Schwarz       4
+579                                       Raju Devidas       4
+586                                             Re4son       4
+588                                      Rhonda D'Vine       4
+604                                         Roger Lynn       4
+617                                      Ryan Kavanagh       4
+77                                    Alexandre ANRIOT       4
+75                                  Alexander Sosedkin       4
+639                              Sergio Durigan Junior       4
+65                                   Alessandro Vesely       4
+644                                    Simon Josefsson       4
+646                                      Simon Quigley       4
+421                          Leopold Palomo-Avellaneda       4
+118                                   Aurélien COUDERC       4
+265                                 Frans Spiesschaert       4
+245                                       Eric Dorland       4
+175                                  Christoph Hellwig       4
+351                                 Jochen Sprickerhof       4
+310                                      Hilmar Preuße       4
+298                                        Hector Oron       4
+231                                       Drew Parsons       4
+404                               Konstantin Khomoutov       4
+267                                    Fritz Reichwald       4
+367                                Jonathan Vollebregt       4
+244                                        Eric Cooper       4
+343                                         Jeff Epler       4
+193                                     Daniel Baumann       4
+276                                   Gilles Filippini       4
+370                                      Jordi Mallach       3
+683                                      Teemu Likonen       3
+26                           "Mathieu Parent (Debian)"       3
+626                                        Sandro Tosi       3
+529                                            Nye Liu       3
+724                                      Vincas Dargis       3
+475                                  Mauricio Oliveira       3
+521                                 Nicolas Dandrimont       3
+188                                  Cédric Boutillier       3
+653                                       Stefan Berzl       3
+719                                   Uwe Kleine-König       3
+379                                      Jude DaShiell       3
+281                                     Guilhem Moulin       3
+374                                Josep Guerrero Sole       3
+493                                Michael Siemmeister       3
+221                                  Domenico Andreoli       3
+676                                        Sven Hartge       3
+410                                   L.P.H. van Belle       3
+353                                        Joerg Desch       3
+465                                Matthew Gabeler-Lee       3
+585                                 Raymond Burkholder       3
+329                                      Ivo De Decker       3
+327                                         Iustin Pop       3
+324                                      Igor Scheller       3
+85                                       Amos Jeffries       3
+210                   Debian testing autoremoval watch       3
+84                                      Allison Randal       3
+94                                      Andrei POPESCU       3
+599                                     Robert Edmonds       3
+98                                       Andrey Gursky       3
+83                                     Alfred Grimstad       3
+608                                      Rolf Reintjes       3
+558                                     Peter Mogensen       3
+611                                       Rowan Thorpe       3
+345                                         Jens Reyer       3
+550                                      Paul Schlüter       3
+547                                     Patrick Hieber       3
+214                                      Diego Roversi       3
+106                                    Antoine Beaupre       3
+382                                      Julian Gilbey       3
+43                               "coco.20@t-online.de"       3
+733                                   Wolfgang Schweer       3
+178                                      Clayton Craft       3
+13                                "Dr. Peter J. Bauer"       3
+441                                 Marcin Juszkiewicz       3
+11                        "Debian Bug Tracking System"       3
+402                                         Kevin Otte       3
+264                                     Frank Scheiner       3
+14                              "Dr. Tobias Quathamer"       3
+269                                                GSR       3
+434                                       Luke Faraone       3
+160                                     Charles Plessy       3
+3                                     "Ana C. Custura"       3
+422                                       Libor Klepáč       3
+246                                       Erwan Prioul       3
+257                                     Florian Lohoff       3
+2                              "Alexander E. Patrakov"       3
+786                                           roma1390       3
+796                                      أحمد المحمودي       3
+417                                         Lee Fisher       3
+797                                               慕 冬亮       3
+460                                     Mathieu Parent       3
+74                                     Alexander Skwar       2
+208                                         David Zhan       2
+791   soyeomul@doraji.xyz (Byung-Hee HWANG (황병희, 黃炳熙))       2
+792                                                tom       2
+624                                    Samuel Henrique       2
+759                                   freebsd@tango.lu       2
+757                                        darkestkhan       2
+784                                   psi29a@gmail.com       2
+628                                   Sascha Steinbiss       2
+72                              Alexander Kernozhitsky       2
+67                                         Alex ARNAUD       2
+306                                   Herbert Kaminski       2
+583                                     Raphaël Halimi       2
+755                              crawlspace@riseup.net       2
+228                                    Douglas Guptill       2
+640                                      Sergio Gelato       2
+629                                       Scott Barker       2
+217                                  Dmitry Alexandrov       2
+620                                  Saif Abdul Cassim       2
+773                      marcel-hollerbach@t-online.de       2
+601                                     Robert Trebula       2
+598                                     Robert Collins       2
+603                                        Robin Geuze       2
+607                                      Rolf Leggewie       2
+789                         saurabhagrawal@disroot.org       2
+254                                    Fernando Toledo       2
+609                                        Ross Gammon       2
+316                               Héctor Orón Martínez       2
+612                                      Ruben Undheim       2
+600                                       Robert Haist       2
+613                                       Rupert Perry       2
+643                                      Simon Flentje       2
+79                                     Alexandre Rossi       2
+769                                             kaliko       2
+615                                      Russell Coker       2
+78                                   Alexandre Detiste       2
+243                                       Enzo Nicosia       2
+263                                        Frank Bauer       2
+66                                     Alessio Treglia       2
+650                                        Sophie Brun       2
+300                                         Heinz Repp       2
+236                                 Elimar Riesebieter       2
+37                                     "Santiago R.R."       2
+696                                     Thomas Pircher       2
+233                                            ETH_15Q       2
+702                                            Tiger!P       2
+704                                      Timo Aaltonen       2
+705                                   Timo Weingärtner       2
+33                                "Raymond Burkholder"       2
+741                                          Yanhao Mo       2
+32                                        "Raula Kula"       2
+740                                             Yangfl       2
+30                               "Paul R. Tagliamonte"       2
+718                                        Uwe Hermann       2
+754                                             chrysn       2
+238                                     Emanuele Rocca       2
+721                                     Valentin Vidic       2
+722                                          Verwijs69       2
+738                                     Xavier Guimard       2
+737                                    Xavier Brochard       2
+27                                 "Matteo F. Vescovi"       2
+726                                      Vincent Caron       2
+18                                        "Garrett R."       2
+728                                    Vincent Ladeuil       2
+23                                     "Keith Packard"       2
+732                                      Will Rouesnel       2
+742                                          Yanhui He       2
+39                                  "Victor Ibragimov"       2
+581                                       Raoul Snyman       2
+273                                  Georges Khaznadar       2
+237                       Elisa Godoy de Castro Guerra       2
+266                                   Frederic Bonnard       2
+751                                   barry@debian.org       2
+59                                          Alan Corey       2
+655                                     Stefan Monnier       2
+56                                      Agustin Martin       2
+659                                      Stephen Frost       2
+295                              Harlan Lieberman-Berg       2
+294                                 Harish Venkatraman       2
+293                                      Harald Dunkel       2
+55                                       Agustin Henze       2
+51                                        Adrian Alves       2
+50                                         Adam Cecile       2
+670                                    Stéphane Aulery       2
+290                             Hans-Christoph Steiner       2
+673                                       Sune Vuorela       2
+47                                         Abhijith PA       2
+675                                     Sveinn í Felli       2
+17                               "Gabriel F. T. Gomes"       2
+677                                       Sven Hoexter       2
+240                                     Emmanuel Bourg       2
+46                                            "rpr //"       2
+288                                Hanno Rince' Wagner       2
+330                                Iván A. Barrera Oro       2
+318                                IOhannes m zmoelnig       2
+440                                  Marc Kleine-Budde       2
+403                                 Keyikedalube Ndang       2
+187                                  Cyril Chaboisseau       2
+177                                   Cindy-Sue Causey       2
+153                              Carlos Donizete Froes       2
+386                                       Justin B Rye       2
+154                                     Carlos Pascual       2
+511                                      Nancy E Davis       2
+512                                      Narcis Garcia       2
+452                                         Martin Guy       2
+362                                     Jonathan Busby       2
+390                                        Jörg Schulz       2
+449                                             Martin       2
+447                                        Mark Hymers       2
+392                                      Jörn Heissler       2
+519                                       Nick Terrell       2
+445                                        Maria Bisen       2
+115                                         Athanasius       2
+526                                     Noah Meyerhans       2
+113                                      Arto Jantunen       2
+433                                     Lucas Nussbaum       2
+531                                    Octavio Alvarez       2
+432                                       Lucas Castro       2
+121                                       Balasankar C       2
+150                                      Bálint Réczey       2
+461                            Mathieu Trudel-Lapierre       2
+477                                  Maximiliano Curia       2
+182                                     Colin Ian King       2
+183                                      Colin Tuckley       2
+135                                     Benjamin Moody       2
+480                                      Mekeor Melire       2
+380                                    Juhani Numminen       2
+490                                     Michael Prokop       2
+491                                   Michael Schnyder       2
+372                        Jose Miguel Parrella Romero       2
+371                                    Jose M Calhariz       2
+476                                   Maximilian Stein       2
+462                                         Matt Kraai       2
+131                                         Ben Harris       2
+142                                          Bob Weber       2
+471                                        Matti Pöllä       2
+143                                       Boyan Penkov       2
+496                                  Miguel Figueiredo       2
+179                                        Clint Adams       2
+467                                     Matthew Wilcox       2
+463                                       Matt Taggart       2
+369                          Jonathan de Boyne Pollard       2
+431                                      Luca Monducci       2
+483                                      Michael Banck       2
+348                                     Jeroen Dekkers       2
+573                                       Prahlad Yeri       2
+424                                 Lionel Elie Mamane       2
+194                                    Daniel Dehennin       2
+196                                       Daniel Lange       2
+201                                          Dave Hunt       2
+103                                         Andy Smith       2
+571                                    Piotr Ożarowski       2
+168                                 Christian Ehrhardt       2
+554                     Paulo Henrique de Lima Santana       2
+344                                         Jens Korte       2
+556                                       Per Lundberg       2
+409                                     Kyle Robbertze       2
+99                                     Andrey Melnikov       2
+336                                     James Valleroy       2
+418                                        Lee Garrett       2
+340                                 Jean-Louis Deniest       2
+350                                   Joachim Breitner       2
+564                                         Phil Wyett       2
+542                                    Otto Kekäläinen       2
+540                                       Orsós ferenc       2
+412                                        Lajos Veres       2
+577                                              Rafal       2
+575                                   Quick web search       2
+204                                       David Lawyer       2
+576                                 Rafael Laboissière       2
+793                                                  u       1
+235                              Elena ``of Valhalla''       1
+29                                 "Michał Klichowicz"       1
+24                                       "Kevin Brace"       1
+279                                     Gregor Horvath       1
+731                                            Wei Liu       1
+788                                               samy       1
+464                                      Matthew Crews       1
+482                                         Micha Lenk       1
+715                                          Tuxicoman       1
+162                                              Chris       1
+470                                   Matthieu Caneill       1
+166                                 Chrisotphe Blamart       1
+481                     Metztli Information Technology       1
+413                                     Lars Brinkhoff       1
+28                                    "Michael Kesper"       1
+473                                 Mattias Wadenstein       1
+21                                "Jason A. Donenfeld"       1
+795                                            victory       1
+474                             Matus UHLAR - fantomas       1
+794                                             user01       1
+771                                               lkcl       1
+783                                preining@debian.org       1
+787                                              russm       1
+419                                      Leif Lindholm       1
+169                                 Christian Marillat       1
+255                                      Filidor Wiese       1
+260                                    Francisco Gómez       1
+775                                  maximilian attems       1
+261                             Francisco Gómez García       1
+159                                   Charles Chambers       1
+435                       Luke Kenneth Casson Leighton       1
+763                                            helix84       1
+406                                        Kurt Hornik       1
+400                                            KatolaZ       1
+10                                   "David R. Hedges"       1
+171                                  Christian Perrier       1
+31             "Paulo Henrique de Lima Santana (phls)"       1
+758                                    fin4478 fin4478       1
+395                                   Kai-Martin Knaak       1
+756                                   cyrille@bollu.be       1
+443                                   Marco Pellegrini       1
+394                                        Kai Harries       1
+778                                        noone never       1
+391                                        Jörg Sommer       1
+270                                            Gabriel       1
+388                                             Jérôme       1
+167                                    Christian Boltz       1
+744                                      Yavor Doganov       1
+782                       pleskalerts@goforhosting.com       1
+6                                "Andrey Jr. Melnikov"       1
+420                                     Leonardo Lopes       1
+785                                            raphael       1
+383                                       Julien Aubin       1
+89                                      Andreas Huewel       1
+42                                       "bruno.pomar"       1
+709                                       Tom Geissler       1
+226                                      Doran Moppert       1
+192                                         Dan Prince       1
+357                                    John Landmesser       1
+189                                         Dan Benton       1
+112                                             Arthur       1
+73                                     Alexander Kurtz       1
+532                                      Ola Lundqvist       1
+632                                      Scott Talbert       1
+71                                         Alex Myczko       1
+636                                   Sebastian Krause       1
+623                                         Sam Morris       1
+530                                     OGAWA Hirofumi       1
+227                                    Doru Iorgulescu       1
+527                                      Nora Westkott       1
+229                                   Dragan Stancevic       1
+301                                        Helen Koike       1
+63                                    Albretch Mueller       1
+116                                     Attila Lendvai       1
+230                                       Drew DeVault       1
+537                                         Olly Betts       1
+313                                     Holger Mickler       1
+249                                            Evilham       1
+96                                       Andrew Bogott       1
+584                                    Raphaël Hertzog       1
+206                                     David Merchant       1
+589                                  Ricardo Peliquero       1
+207                                       David Prévot       1
+574                                  Przemek Jagielski       1
+323                                      Igor Posledov       1
+93                                     Andreas Ziegler       1
+597                                         Rob Hooper       1
+337                                     Jan Heitkötter       1
+618                                         Ryan Tandy       1
+562                                          Petr Cech       1
+411                                       LaMont Jones       1
+212                               Dhanar Adi Dewandaru       1
+606                                         Roland Mas       1
+341                               Jean-Michel Vourgère       1
+557                                      Peter Merhaut       1
+101                                      André Verwijs       1
+551                                        Paul Sutton       1
+648                                     Simon Ruderich       1
+522                                   Nicolas Sebrecht       1
+486                                    Michael Jeanson       1
+691                                             Thomas       1
+45                                            "mer.at"       1
+682                                                 TJ       1
+684                                             Tehnic       1
+685                                                Tek       1
+686                                      Terry McKenna       1
+287                                      Gürkan Myczko       1
+44                                           "h.thien"       1
+205                                   David Margerison       1
+286                                     Göran Weinholt       1
+497                                    Miguel Hermanns       1
+232                                        DutchGigalo       1
+35                              "Ricardo F. Peliquero"       1
+699                                               Thue       1
+700                                       Tiago Ilieve       1
+283                                    Gunnar Thorburn       1
+234                                   Egmont Koblinger       1
+136                                    Benoit Panizzon       1
+706                                               Tixy       1
+680                                     Sven Schiffner       1
+498                                    Miikka Salminen       1
+297                                             Haïkel       1
+513                                     Nathan Schulte       1
+652                                Stanislaw Findeisen       1
+518                                      Nick Phillips       1
+517                                       Nick Morrott       1
+58                                         Al Grimstad       1
+296                                       Harry Haller       1
+516                                     Nick Gawronski       1
+515                                   Nicholas Steeves       1
+661                                       Steve Capper       1
+292                                  Hans-Willi Werres       1
+500                                         Mike Gerow       1
+510                                   NOKUBI Takatsugu       1
+120                                      Bailey Parker       1
+668                                    Steven De Herdt       1
+291                                   Hans-Georg Thien       1
+506                                      Miroslav Kure       1
+504                                     Milan Kupcevic       1
+503                                 Mikhail Zakharenko       1
+185                                 Contact Webmasteur       1
+399                                      Kartik Mistry       1
