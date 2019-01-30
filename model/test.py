@@ -180,8 +180,8 @@ for we, w in zip(tt,tst_weights):
 
     pred_idx = torch.max(pred, dim=1)[1]
 
-	pred = pred.sort()
-    array = pred[1][0][-5:]
+    pred = pred.sort()
+    array = pred[1][0][-3:]
     if y in array:
     	hit += 1
 
@@ -191,7 +191,7 @@ for we, w in zip(tt,tst_weights):
     print(loss.item())
     total_loss_test += loss.item()
 
-accuracy = float(hit)/float(len(train_dl))
+accuracy = float(hit)/float(len(test_dl))
 train_acc = accuracy_score(y_true_test1, y_pred_test1)
 train_loss = total_loss_test/len(test_dl)
 print(f'Test loss: {train_loss} acc: {train_acc}')

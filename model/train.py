@@ -147,7 +147,7 @@ opt = torch.optim.Adam(model.parameters(), lr=learning_rate)
 train_dl= DataLoader(dtrain, batch_size=1)
 num_batch = len(train_dl)
 for epoch in range(num_epochs):
-	hit = 0
+    hit = 0
     y_true_train = list()
     y_pred_train = list()
     total_loss_train = 0
@@ -182,7 +182,7 @@ for epoch in range(num_epochs):
         t.set_postfix(loss=loss.item())
         pred_idx = torch.max(pred, dim=1)[1]
         pred = pred.sort()
-        array = pred[1][0][-5:]
+        array = pred[1][0][-3:]
         if y in array:
         	hit += 1
 
