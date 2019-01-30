@@ -171,9 +171,8 @@ for idx,vall in zip(sd.index,sd):
     rt = f'{idx}\t{vall}\n'
     tile.write(rt)
 tile.close()
-plt.hist(qw['counts'],bins= 50,color='red')
-plt.ylabel('Number of Users')
-plt.xlabel('Frequency')
-#plt.show()
-plt.savefig('myfig.png')
+ax = sd.plot(kind='bar')
+fig = ax.get_figure()
+fig.autofmt_xdate()
+fig.savefig('hist.png')
 
