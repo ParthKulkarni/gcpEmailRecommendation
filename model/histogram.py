@@ -160,6 +160,7 @@ print(len(df['replier'].unique()))
 
 
 qw = df.groupby(['replier']).size().reset_index(name='counts')
+qw = qw.sort_values(by='counts',ascending=0)
 vile = open('users.txt','w')
 with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     vile.write(f'{qw}\n')
