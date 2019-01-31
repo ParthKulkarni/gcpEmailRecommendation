@@ -55,15 +55,16 @@ torch.manual_seed(42)
 BASE_PATH = '/home/niki/gcpEmailRecommendation'
 doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
 folder_path = "/home/niki//gcpEmailRecommendation/Scraping/debian_dataset/*"
-file_name = BASE_PATH + "/model/dataframe6.csv"
-file_name1 = BASE_PATH + "/model/dataframe7.csv"
-file_name2 = BASE_PATH + "/model/dataframe8.csv"
+file_name = BASE_PATH + "/model/dataframe3.csv"
+file_name1 = BASE_PATH + "/model/dataframe4.csv"
+file_name2 = BASE_PATH + "/model/dataframe5.csv"
 sys.path.insert(0, BASE_PATH + '/Preprocessing')
 PATH = BASE_PATH + '/model/second_model.pickle'
-TRAIN_PATH = '/home/niki/train1.pkl'
-TEST_PATH  = '/home/niki/test1.pkl'
-USER_TRAIN = '/home/niki/user_weights1.npy'
-USER_TEST  = '/home/niki/user_weights_test1.npy'
+TRAIN_PATH = '/home/niki/train.pkl'
+TEST_PATH  = '/home/niki/test.pkl'
+USER_TRAIN = '/home/niki/user_weights.npy'
+USER_TEST  = '/home/niki/user_weights_test.npy'
+REM_PATH = '/home/niki/users.pkl'
 
 import preprocessing
 import read_file
@@ -227,17 +228,9 @@ df.to_csv(file_name2)
 qw = df.groupby(['replier']).size().reset_index(name='counts')
 qw = qw.sort_values(by='counts',ascending=0)
 qw = qw.drop(qw[qw.counts > 1].index)
-rem_users = list(qw['replier'])
-print('Removed users :',len(rem_users),'\n')
+qw.to_pickle(REM_PATH)
 
-print('BEFORE')
-print('Train : ',df_trn.shape[0])
-print('Test : ',df_tst.shape[0],'\n')
-df_trn = df_trn[~df_trn['replier'].isin(rem_users)]
-df_tst = df_tst[~df_tst['replier'].isin(rem_users)]
-print('AFTER')
-print('Train : ',df_trn.shape[0])
-print('Test : ',df_tst.shape[0],'\n')
+
 
 
 # In[4]:

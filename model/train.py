@@ -44,10 +44,11 @@ torch.manual_seed(42)
 
 
 # In[16]:
-TRAIN_PATH = '/home/parth/train.pkl'
-USER_TRAIN = '/home/parth/user_weights.npy'
-BASE_PATH = '/home/parth'
+TRAIN_PATH = '/home/niki/train.pkl'
+USER_TRAIN = '/home/niki/user_weights.npy'
+BASE_PATH = '/home/niki'
 PATH = BASE_PATH + '/first_model.pt'
+REM_PATH = '/home/niki/users.pkl'
 
 user_vec_len = 800
 
@@ -63,10 +64,16 @@ trn_weights = np.load(USER_TRAIN)
 
 # embedding |> flag
 class VectorizeData(Dataset):
-	def __init__(self, df_path, maxlen=300):
+	def __init__(self, df_path,user_path, maxlen=300):
 		self.df = pd.read_pickle(df_path)
+		self.us = pd.read_pickle(user_path)
 		self.maxlen = 300
-		print(self.df)
+		rem_users = list(self.us['replier'])
+		print('BEFORE')
+		print('Train : ',self.df.shape[0])
+		self.df = self.df[~self.df['replier'].isin(rem_users)]
+		print('AFTER')
+		print('Train : ',dtrain.df.shape[0])
 
 	def __len__(self):
 		return self.df.shape[0]
@@ -87,7 +94,7 @@ class VectorizeData(Dataset):
 # In[4]:
 
 
-dtrain = VectorizeData(TRAIN_PATH)
+dtrain = VectorizeData(TRAIN_PATH,REM_PATH)
 
 
 # In[9]:
