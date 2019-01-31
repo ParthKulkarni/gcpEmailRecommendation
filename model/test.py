@@ -67,16 +67,10 @@ tst_weights = np.load(USER_TEST)
 
 # embedding |> flag
 class VectorizeData(Dataset):
-    def __init__(self, df_path,user_path, maxlen=300):
+    def __init__(self, df_path, maxlen=300):
         self.df = pd.read_pickle(df_path)
-		self.us = pd.read_pickle(user_path)
 		self.maxlen = 300
-		rem_users = list(self.us['replier'])
-		print('BEFORE')
-		print('Test : ',self.df.shape[0])
-		self.df = self.df[~self.df['replier'].isin(rem_users)]
-		print('AFTER')
-		print('Test : ',dtrain.df.shape[0])
+		print(self.df)
         
     def __len__(self):
         return self.df.shape[0]
@@ -97,7 +91,7 @@ class VectorizeData(Dataset):
 # In[7]:
 
 
-dtest = VectorizeData(TEST_PATH,REM_PATH)
+dtest = VectorizeData(TEST_PATH)
 
 
 # In[8]:

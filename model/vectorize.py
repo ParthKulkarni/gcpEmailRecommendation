@@ -55,15 +55,15 @@ torch.manual_seed(42)
 BASE_PATH = '/home/niki/gcpEmailRecommendation'
 doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
 folder_path = "/home/niki//gcpEmailRecommendation/Scraping/debian_dataset/*"
-file_name = BASE_PATH + "/model/dataframe3.csv"
-file_name1 = BASE_PATH + "/model/dataframe4.csv"
-file_name2 = BASE_PATH + "/model/dataframe5.csv"
+file_name = BASE_PATH + "/model/dataframe6.csv"
+file_name1 = BASE_PATH + "/model/dataframe7.csv"
+file_name2 = BASE_PATH + "/model/dataframe8.csv"
 sys.path.insert(0, BASE_PATH + '/Preprocessing')
 PATH = BASE_PATH + '/model/second_model.pickle'
-TRAIN_PATH = '/home/niki/train.pkl'
-TEST_PATH  = '/home/niki/test.pkl'
-USER_TRAIN = '/home/niki/user_weights.npy'
-USER_TEST  = '/home/niki/user_weights_test.npy'
+TRAIN_PATH = '/home/niki/train1.pkl'
+TEST_PATH  = '/home/niki/test1.pkl'
+USER_TRAIN = '/home/niki/user_weights1.npy'
+USER_TEST  = '/home/niki/user_weights_test1.npy'
 REM_PATH = '/home/niki/users.pkl'
 
 import preprocessing
@@ -138,7 +138,6 @@ df_trn = pd.DataFrame()
 df_tst = pd.DataFrame()
 split_date = datetime.datetime.strptime('01 Sep 2018 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
-users = []
 dates  = []
 trn_dates = []
 tst_dates = []
@@ -160,9 +159,9 @@ for thr in thread_list:
         if temp == '':
             cnt += 1
             continue
-        users.append(sender)
         
         temp = obj.replace_tokens(temp)
+        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
         if flag==0:
             start_date = datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')
             if start_date > split_date:
@@ -172,9 +171,7 @@ for thr in thread_list:
             t = temp
             flag = 1
             continue
-
-
-        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+   
         
         if start_date <= split_date:
             t = t + temp
@@ -182,6 +179,27 @@ for thr in thread_list:
         else:
             df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)       
     th_no += 1
+
+qw = df.groupby(['replier']).size().reset_index(name='counts')
+qw = qw.sort_values(by='counts',ascending=0)
+users = list(qw.drop(qw[qw.counts < 2].index)['replier'])
+qw = qw.drop(qw[qw.counts > 1].index)
+qw.to_pickle(REM_PATH)
+
+rem_users = list(qw['replier'])
+print('Removed users :',len(rem_users),'\n')
+
+print('BEFORE')
+print('Train : ',df_trn.shape[0])
+print('Test : ',df_tst.shape[0],'\n')
+df_trn = df_trn[~df_trn['replier'].isin(rem_users)]
+df_tst = df_tst[~df_tst['replier'].isin(rem_users)]
+print('AFTER')
+print('Train : ',df_trn.shape[0])
+print('Test : ',df_tst.shape[0],'\n')
+
+print(len(users))
+
 
 trn_users = list(df_trn.groupby("thread_no", as_index=False)['replier'].apply(lambda x: x.iloc[:-1]))
 tst_users = list(df_tst.groupby("thread_no", as_index=False)['replier'].apply(lambda x: x.iloc[:-1]))
@@ -224,12 +242,6 @@ df_trn.dropna(inplace=True)
 df_trn.to_csv(file_name)
 df_tst.to_csv(file_name1)
 df.to_csv(file_name2)
-
-qw = df.groupby(['replier']).size().reset_index(name='counts')
-qw = qw.sort_values(by='counts',ascending=0)
-qw = qw.drop(qw[qw.counts > 1].index)
-qw.to_pickle(REM_PATH)
-
 
 
 
