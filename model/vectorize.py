@@ -306,8 +306,8 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
                 date_diff = cur_date - thread_start_date
                 total_seconds = date_diff.total_seconds()
                 print(str(total_seconds))
-                decay_value = math.exp(-total_seconds)
-                print(str(decay_value))
+                # decay_value = math.exp(-total_seconds)
+                # print(str(decay_value))
             array[trn_user_indices[j]] = 1
             weight_list.append(list(array))
             indexx+=1
@@ -340,8 +340,8 @@ for i in range(0, len(df_tst.groupby("thread_no"))):
                 date_diff = cur_date - thread_start_date
                 total_seconds = date_diff.total_seconds()
                 print(str(total_seconds))
-                decay_value = math.exp(-total_seconds)
-                print(str(decay_value))
+                # decay_value = math.exp(-total_seconds)
+                # print(str(decay_value))
             array[tst_user_indices[j]] = 1
             weight_list.append(list(array))
             indexx+=1
@@ -372,7 +372,7 @@ class VectorizeData(Dataset):
         self.df['bodyidx'] = dd.from_pandas(self.df,npartitions=nCores).map_partitions(
           lambda dp : dp.apply(
              lambda x : indexer(x.body),axis=1)).\
-        compute(get=get)
+        compute(scheduler='processes')
         print('Calculating lengths')
         self.df['lengths'] = self.df.bodyidx.apply(len)
 #         if calc_maxlen == True:
