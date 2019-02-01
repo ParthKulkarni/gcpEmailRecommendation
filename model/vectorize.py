@@ -133,7 +133,6 @@ print(count_file)
 
 # In[3]:
 
-
 df_trn = pd.DataFrame()
 df_tst = pd.DataFrame()
 split_date = datetime.datetime.strptime('01 Sep 2018 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
@@ -143,8 +142,10 @@ trn_dates = []
 tst_dates = []
 trn_users = []
 tst_users = []
+qw1 = []
 th_no = 0
 cnt = 0
+
 for thr in thread_list:
     start_date = ""
     flag = 0
@@ -172,7 +173,8 @@ for thr in thread_list:
             flag = 1
             continue
    
-        
+        qw1.append(sender)
+
         if start_date <= split_date:
             t = t + temp
             df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
@@ -182,8 +184,9 @@ for thr in thread_list:
 
 qw = df.groupby(['replier']).size().reset_index(name='counts')
 qw = qw.sort_values(by='counts',ascending=0)
-users = list(qw.drop(qw[qw.counts < 2].index)['replier'])
-qw = qw.drop(qw[qw.counts > 1].index)
+users = list(qw.drop(qw[(qw.counts < 2) & (df_trn['replier'].isin(qw1))].index)['replier'])
+print(qw.head())
+qw = qw.drop(qw[(qw.counts < 2) & (df_trn['replier'].isin(qw1))].index)
 qw.to_pickle(REM_PATH)
 
 rem_users = list(qw['replier'])
