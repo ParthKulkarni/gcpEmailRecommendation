@@ -184,9 +184,9 @@ for thr in thread_list:
 
 qw = df.groupby(['replier']).size().reset_index(name='counts')
 qw = qw.sort_values(by='counts',ascending=0)
-users = list(qw.drop(qw[(qw.counts < 2) & (df_trn['replier'].isin(qw1))].index)['replier'])
+users = list(qw.drop(qw[(qw.counts < 2) & (df['replier'].isin(qw1))].index)['replier'])
 print(qw.head())
-qw = qw.drop(qw[(qw.counts < 2) & (df_trn['replier'].isin(qw1))].index)
+qw = qw.drop(qw[(qw.counts > 1) & (df['replier'].isin(qw1))].index)
 qw.to_pickle(REM_PATH)
 
 rem_users = list(qw['replier'])
@@ -230,8 +230,8 @@ for rep in df_trn['replier']:
 for rep in df_tst['replier']:
     df_tst.loc[df_tst['replier']==rep,'int_replier'] = rep_to_index[rep]
 
-for rep in df['replier']:
-    df.loc[df['replier']==rep,'int_replier'] = rep_to_index[rep]
+#for rep in df['replier']:
+#    df.loc[df['replier']==rep,'int_replier'] = rep_to_index[rep]
     
 df_tst['replier'] = df_tst.groupby('thread_no')['replier'].shift(-1)
 df_tst['int_replier'] = df_tst.groupby('thread_no')['int_replier'].shift(-1)

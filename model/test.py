@@ -43,17 +43,17 @@ warnings.filterwarnings('ignore')
 torch.manual_seed(42)
 
 BASE_PATH = '/home/niki'
-PATH = BASE_PATH + '/first_model.pt'
+PATH = BASE_PATH + '/second_model.pt'
 
-TEST_PATH  = '/home/niki/test.pkl'
-USER_TEST  = '/home/niki/user_weights_test.npy'
+TEST_PATH  = '/home/niki/test1.pkl'
+USER_TEST  = '/home/niki/user_weights_test1.npy'
 REM_PATH = '/home/niki/users.pkl'
 
 
 # In[2]:
 
 
-user_vec_len = 800
+user_vec_len = 659
 
 
 # In[5]:
@@ -69,8 +69,8 @@ tst_weights = np.load(USER_TEST)
 class VectorizeData(Dataset):
     def __init__(self, df_path, maxlen=300):
         self.df = pd.read_pickle(df_path)
-		self.maxlen = 300
-		print(self.df)
+        self.maxlen = 300
+        print(self.df)
         
     def __len__(self):
         return self.df.shape[0]

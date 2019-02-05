@@ -50,7 +50,7 @@ BASE_PATH = '/home/niki'
 PATH = BASE_PATH + '/second_model.pt'
 REM_PATH = '/home/niki/users.pkl'
 
-user_vec_len = 800
+user_vec_len = 659
 
 
 # In[2]:
