@@ -70,6 +70,8 @@ import preprocessing
 import read_file
 import datetime
 
+nile = open('debug.txt','w')
+
 def extract_debian(text):
     text = text.split('\n\n\n')
     header = text[0].split('\n')
@@ -129,6 +131,8 @@ except:
     print(fol)
 print(len(thread_list))
 print(count_file)
+nile.write(f'Threads : {len(thread_list)}\n')
+nile.write(f'Mails : {count_file}\n')
 
 
 # In[3]:
@@ -191,6 +195,7 @@ qw.to_pickle(REM_PATH)
 
 rem_users = list(qw['replier'])
 print('Removed users :',len(rem_users),'\n')
+nile.write(f'Removed users :{len(rem_users)}\n')
 
 print('BEFORE')
 print('Train : ',df_trn.shape[0])
@@ -201,6 +206,14 @@ print('AFTER')
 print('Train : ',df_trn.shape[0])
 print('Test : ',df_tst.shape[0],'\n')
 
+nile.write(f'BEFORE\n')
+nile.write(f'Train : {df_trn.shape[0]}\n')
+nile.write(f'Test : {df_tst.shape[0]}\n')
+nile.write(f'AFTER\n')
+nile.write(f'Train : {df_trn.shape[0]}\n')
+nile.write(f'Test : {df_tst.shape[0]}\n')
+
+
 print(len(users))
 
 
@@ -210,6 +223,7 @@ trn_dates = list(df_trn.groupby("thread_no", as_index=False)['cur_date'].apply(l
 tst_dates = list(df_tst.groupby("thread_no", as_index=False)['cur_date'].apply(lambda x: x.iloc[:-1]))
 
 print(cnt)
+nile.write(f'Null files : {cnt}\n')
 print(count_file)
 print(len(df['body']))
 print(len(df['thread_no'].unique()))
@@ -221,7 +235,8 @@ for rep in users:
         rep_to_index[rep] = index
         index += 1
 pprint(rep_to_index)
-
+nile.write('\n\n\n\n')
+nile.write(f'{rep_to_index}\n\n')
 
 for rep in df_trn['replier']:
     df_trn.loc[df_trn['replier']==rep,'int_replier'] = rep_to_index[rep]
@@ -256,7 +271,7 @@ for sent in df_trn.body.values:
     words.update(w.text.lower() for w in nlp(sent))
 
 words = sorted(words, key=words.get, reverse=True)
-print(words)
+#print(words)
 words = ['_PAD','_UNK'] + words
 
 word2idx = {o:i for i,o in enumerate(words)}
@@ -268,7 +283,7 @@ def indexer(s):
     infer_epoch=1000
     m = gensim.models.Doc2Vec.load(doc2vec_path)
     Document_vector = [x for x in m.infer_vector(s, alpha=start_alpha, steps=infer_epoch)]
-    print(Document_vector)
+    print('we are working')
     return Document_vector
 
 
@@ -302,10 +317,10 @@ user_vec_len = max(user_indices) + 1
 import math
 indexx=0
 weight_list = []
-print(len(trn_dates))
-print(len(trn_users))
-print(df_trn.thread_no.shape[0])
-print(len(trn_user_indices))
+#print(len(trn_dates))
+nile.write(f'Train users : {len(trn_users)}\n')
+#print(df_trn.thread_no.shape[0])
+#print(len(trn_user_indices))
 
 thread_no_list = list(df_trn['thread_no'])
 
@@ -320,7 +335,7 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
                 cur_date = trn_dates[j].to_pydatetime()
                 date_diff = cur_date - thread_start_date
                 total_seconds = date_diff.total_seconds()
-                print(str(total_seconds))
+                #print(str(total_seconds))
                 # decay_value = math.exp(-total_seconds)
                 # print(str(decay_value))
             array[trn_user_indices[j]] = 1
@@ -328,7 +343,7 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
             indexx+=1
 
 trn_weights = np.array(weight_list)
-print(trn_weights)
+#print(trn_weights)
 
 
 # In[8]:
@@ -337,10 +352,10 @@ print(trn_weights)
 import math
 indexx=0
 weight_list = []
-print(len(tst_dates))
-print(len(tst_users))
-print(df_tst.thread_no.shape[0])
-print(len(tst_user_indices))
+#print(len(tst_dates))
+nile.write(f'Test users : {len(tst_users)}\n')
+#print(df_tst.thread_no.shape[0])
+#print(len(tst_user_indices))
 
 thread_no_list = list(df_tst['thread_no'])
 
@@ -354,7 +369,7 @@ for i in range(0, len(df_tst.groupby("thread_no"))):
                 cur_date = tst_dates[j].to_pydatetime()
                 date_diff = cur_date - thread_start_date
                 total_seconds = date_diff.total_seconds()
-                print(str(total_seconds))
+                #print(str(total_seconds))
                 # decay_value = math.exp(-total_seconds)
                 # print(str(decay_value))
             array[tst_user_indices[j]] = 1
@@ -362,7 +377,7 @@ for i in range(0, len(df_tst.groupby("thread_no"))):
             indexx+=1
 
 tst_weights = np.array(weight_list)
-print(tst_weights)
+#print(tst_weights)
 
 
 # In[14]:
