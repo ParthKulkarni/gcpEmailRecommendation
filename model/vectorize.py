@@ -200,15 +200,16 @@ nile.write(f'Removed users :{len(rem_users)}\n')
 print('BEFORE')
 print('Train : ',df_trn.shape[0])
 print('Test : ',df_tst.shape[0],'\n')
+nile.write(f'BEFORE\n')
+nile.write(f'Train : {df_trn.shape[0]}\n')
+nile.write(f'Test : {df_tst.shape[0]}\n')
 df_trn = df_trn[~df_trn['replier'].isin(rem_users)]
 df_tst = df_tst[~df_tst['replier'].isin(rem_users)]
 print('AFTER')
 print('Train : ',df_trn.shape[0])
 print('Test : ',df_tst.shape[0],'\n')
 
-nile.write(f'BEFORE\n')
-nile.write(f'Train : {df_trn.shape[0]}\n')
-nile.write(f'Test : {df_tst.shape[0]}\n')
+
 nile.write(f'AFTER\n')
 nile.write(f'Train : {df_trn.shape[0]}\n')
 nile.write(f'Test : {df_tst.shape[0]}\n')
