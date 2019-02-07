@@ -54,17 +54,17 @@ torch.manual_seed(42)
 
 BASE_PATH = '/home/niki/gcpEmailRecommendation'
 doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
-folder_path = "/home/niki//gcpEmailRecommendation/Scraping/debian_dataset/*"
-file_name = BASE_PATH + "/model/dataframe6.csv"
-file_name1 = BASE_PATH + "/model/dataframe7.csv"
-file_name2 = BASE_PATH + "/model/dataframe8.csv"
+folder_path = "/home/niki/ALL_dataset/*"
+file_name = BASE_PATH + "/model/dataframe9.csv"
+file_name1 = BASE_PATH + "/model/dataframe10.csv"
+file_name2 = BASE_PATH + "/model/dataframe11.csv"
 sys.path.insert(0, BASE_PATH + '/Preprocessing')
 PATH = BASE_PATH + '/model/second_model.pickle'
-TRAIN_PATH = '/home/niki/train1.pkl'
-TEST_PATH  = '/home/niki/test1.pkl'
-USER_TRAIN = '/home/niki/user_weights1.npy'
-USER_TEST  = '/home/niki/user_weights_test1.npy'
-REM_PATH = '/home/niki/users.pkl'
+TRAIN_PATH = '/home/niki/train2.pkl'
+TEST_PATH  = '/home/niki/test2.pkl'
+USER_TRAIN = '/home/niki/user_weights2.npy'
+USER_TEST  = '/home/niki/user_weights_test2.npy'
+REM_PATH = '/home/niki/users2.pkl'
 
 import preprocessing
 import read_file
