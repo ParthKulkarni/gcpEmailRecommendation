@@ -49,6 +49,7 @@ TEST_PATH  = '/home/niki/test1.pkl'
 USER_TEST  = '/home/niki/user_weights_test1.npy'
 REM_PATH = '/home/niki/users.pkl'
 
+nile = open('debug-test.txt','w')
 
 # In[2]:
 
@@ -199,4 +200,7 @@ train_loss = total_loss_test/len(test_dl)
 print(f'Test loss: {train_loss}')
 print('Accuracy : ',accuracy)
 print('\n')
+nile.write(f'Test loss: {train_loss}\n')
+nile.write(f'Accuracy : {accuracy}')
+nile.write(f'\n\n')
 
