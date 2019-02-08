@@ -52,7 +52,7 @@ REM_PATH = '/home/niki/users.pkl'
 
 user_vec_len = 659
 
-
+nile = open('debug-train.txt','w')
 # In[2]:
 
 
@@ -199,8 +199,11 @@ for epoch in range(num_epochs):
     print(f' Epoch {epoch}: Train loss: {train_loss}')
     print('Accuracy : ',accuracy)
     print('\n')
+    nile.write(f' Epoch {epoch}\nTrain loss: {train_loss}\n')
+    nile.write(f'Accuracy : {accuracy}')
+    nile.write(f'\n\n')
 torch.save(model.state_dict(),PATH)
-
+nile.close()
 # architecture 
 # loading pickle file and predict
 
