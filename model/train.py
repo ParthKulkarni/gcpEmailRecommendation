@@ -47,7 +47,7 @@ torch.manual_seed(42)
 TRAIN_PATH = '/home/niki/train1.pkl'
 USER_TRAIN = '/home/niki/user_weights1.npy'
 BASE_PATH = '/home/niki'
-PATH = BASE_PATH + '/second_model.pt'
+PATH = BASE_PATH + '/'
 REM_PATH = '/home/niki/users.pkl'
 
 user_vec_len = 659
@@ -144,7 +144,7 @@ opt = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 # In[18]:
 
-
+model_name = ''
 train_dl= DataLoader(dtrain, batch_size=1)
 num_batch = len(train_dl)
 for epoch in range(num_epochs):
@@ -202,7 +202,10 @@ for epoch in range(num_epochs):
     nile.write(f' Epoch {epoch}\nTrain loss: {train_loss}\n')
     nile.write(f'Accuracy : {accuracy}')
     nile.write(f'\n\n')
-torch.save(model.state_dict(),PATH)
+    if epoch % 5 == 0 :
+        model_name = f'{epoch}model.pt'
+        PATH = PATH + model_name
+        torch.save(model.state_dict(),PATH)
 nile.close()
 # architecture 
 # loading pickle file and predict
