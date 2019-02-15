@@ -54,9 +54,9 @@ import warnings
 warnings.filterwarnings('ignore')
 torch.manual_seed(42)
 
-BASE_PATH = '/home/parth/BE_Project/gcpEmailRecommendation'
+BASE_PATH = '/home/parth/gcpEmailRecommendation'
 #doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
-folder_path = "/home/parth/BE_Project/gcpEmailRecommendation/Scraping/mini_deb/*"
+folder_path = "/home/parth/ALL_dataset_1/*"
 file_name = BASE_PATH + "/model/dataframe12.csv"
 file_name1 = BASE_PATH + "/model/dataframe13.csv"
 file_name2 = BASE_PATH + "/model/dataframe14.csv"
@@ -67,7 +67,7 @@ TEST_PATH  = '/home/parth/test3.pkl'
 USER_TRAIN = '/home/parth/user_weights3.npy'
 USER_TEST  = '/home/parth/user_weights_test3.npy'
 REM_PATH = '/home/parth/users3.pkl'
-ELMO_PATH = '/home/parth/BE_Project/Elmo/elmo_2x1024_128_2048cnn_1xhighway_weights.magnitude'
+ELMO_PATH = "/home/parth/GoogleNews-vectors-negative300.magnitude"
 
 import preprocessing
 import read_file
@@ -143,7 +143,7 @@ nile.write(f'Mails : {count_file}\n')
 
 df_trn = pd.DataFrame()
 df_tst = pd.DataFrame()
-split_date = datetime.datetime.strptime('01 Sep 2017 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
+split_date = datetime.datetime.strptime('01 Sep 2018 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
 dates  = []
 trn_dates = []
@@ -163,6 +163,7 @@ for thr in thread_list:
         sender = mail['From'].split('<')[0].strip()
         temp   = mail['content']
         temp = deb_toppostremoval(temp)
+        raw_body = temp
         temp = deb_lemmatize(temp)
         temp = clean_debian(temp)
         if temp == '':
@@ -170,13 +171,13 @@ for thr in thread_list:
             continue
         
         temp = obj.replace_tokens(temp)
-        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+        df = df.append({'raw_body':str(raw_body),'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
         if flag==0:
             start_date = datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')
             if start_date > split_date:
-                df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
+                df_tst = df_tst.append({'raw_body':raw_body,'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
             else:
-                df_trn = df_trn.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
+                df_trn = df_trn.append({'raw_body':raw_body,'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
             t = temp
             flag = 1
             continue
@@ -185,9 +186,9 @@ for thr in thread_list:
 
         if start_date <= split_date:
             t = t + temp
-            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+            df_trn = df_trn.append({'raw_body':raw_body,'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
         else:
-            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)       
+            df_tst = df_tst.append({'raw_body':raw_body,'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)       
     th_no += 1
 
 qw = df.groupby(['replier']).size().reset_index(name='counts')
@@ -267,7 +268,6 @@ df_tst.to_csv(file_name1)
 df.to_csv(file_name2)
 
 
-
 # In[4]:
 
 
@@ -283,18 +283,20 @@ word2idx = {o:i for i,o in enumerate(words)}
 idx2word = {i:o for i,o in enumerate(words)}
 
 #@jit
-def indexer(s,elmo_vecs):
+def indexer(s):
     start_alpha=0.01
     infer_epoch=1000
 
-    doc_vec = np.zeros(768)
+    doc_vec = np.zeros(300)
+
+    elmo_vecs = Magnitude(ELMO_PATH)
 
     print(s)
     words = s.split(" ")
     print(words)
 
     word_vecs = elmo_vecs.query(words)
-    print(word_vecs)
+    #print(word_vecs)
     
     for word_vec in word_vecs:
         doc_vec = np.add(doc_vec, word_vec)
@@ -416,11 +418,11 @@ np.save(USER_TEST, tst_weights)
 
 # embedding |> flag
 class VectorizeData(Dataset):
-    def __init__(self, df_path, elmo_vecs,maxlen=300):
+    def __init__(self, df_path,maxlen=300):
         self.df = pd.read_csv(df_path, error_bad_lines=False)
         self.df['body'] = self.df.body.apply(lambda x: x.strip())
         print('Indexing...')
-        self.df['bodyidx'] = self.df.body.apply(indexer, elmo_vecs=elmo_vecs)
+        self.df['bodyidx'] = self.df.body.apply(indexer)
         # self.df['bodyidx'] = dd.from_pandas(self.df,npartitions=nCores).map_partitions(
         #   lambda dp : dp.apply(
         #      lambda x : indexer(x.body, elmo_vecs=elmo_vecs),axis=1)).\
@@ -452,10 +454,9 @@ class VectorizeData(Dataset):
 
 # In[11]:
 
-elmo_vecs = Magnitude(ELMO_PATH)
 #ds = VectorizeData(file_name2)
-dtrain = VectorizeData(file_name,elmo_vecs)
-dtest = VectorizeData(file_name1,elmo_vecs)
+dtrain = VectorizeData(file_name)
+dtest = VectorizeData(file_name1)
 
 
 # In[12]:
