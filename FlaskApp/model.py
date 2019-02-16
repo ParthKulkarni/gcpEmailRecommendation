@@ -17,7 +17,7 @@ class model :
         for x in range (10) :
             if li[x] == 1 :
                 self.li_name.append(x)
-        #return self.li_name
+        return self.li_name
 
 	
     def map_user_to_thread(self) :
@@ -29,8 +29,8 @@ class model :
             self.user_prediction[name_id] = list
         print(self.user_prediction)         
 		
-ob = model()
-ob.generate_random_list()
-ob.map_user_to_thread()
-ob.generate_random_list()
-ob.map_user_to_thread()
+# ob = model()
+# ob.generate_random_list()
+# ob.map_user_to_thread()
+# ob.generate_random_list()
+# ob.map_user_to_thread()
