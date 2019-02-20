@@ -21,6 +21,10 @@ import string
 from pprint import pprint
 from collections import Counter, OrderedDict
 
+import networkx as nx
+import operator
+
+
 import spacy
 nlp = spacy.load('en',disable=['parser', 'tagger', 'ner'])
 import pandas as pd
@@ -52,19 +56,19 @@ import warnings
 warnings.filterwarnings('ignore')
 torch.manual_seed(42)
 
-BASE_PATH = '/home/niki/gcpEmailRecommendation'
-doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
-folder_path = "/home/niki/ALL_dataset/*"
+BASE_PATH = '/home/parth/BE_Project/gcpEmailRecommendation'
+doc2vec_path="/home/parth/apnews_dbow/doc2vec.bin"
+folder_path = "/home/parth/BE_Project/gcpEmailRecommendation/Scraping/mini_deb/*"
 file_name = BASE_PATH + "/model/dataframe9.csv"
 file_name1 = BASE_PATH + "/model/dataframe10.csv"
 file_name2 = BASE_PATH + "/model/dataframe11.csv"
 sys.path.insert(0, BASE_PATH + '/Preprocessing')
 PATH = BASE_PATH + '/model/second_model.pickle'
-TRAIN_PATH = '/home/niki/train2.pkl'
-TEST_PATH  = '/home/niki/test2.pkl'
-USER_TRAIN = '/home/niki/user_weights2.npy'
-USER_TEST  = '/home/niki/user_weights_test2.npy'
-REM_PATH = '/home/niki/users2.pkl'
+TRAIN_PATH = '/home/parth/train2.pkl'
+TEST_PATH  = '/home/parth/test2.pkl'
+USER_TRAIN = '/home/parth/user_weights_ppr.npy'
+USER_TEST  = '/home/parth/user_weights_test_ppr.npy'
+REM_PATH = '/home/parth/users2.pkl'
 
 import preprocessing
 import read_file
@@ -139,7 +143,7 @@ nile.write(f'Mails : {count_file}\n')
 
 df_trn = pd.DataFrame()
 df_tst = pd.DataFrame()
-split_date = datetime.datetime.strptime('01 Sep 2018 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
+split_date = datetime.datetime.strptime('01 Sep 2017 23:01:14 +0000', '%d %b %Y %H:%M:%S %z')
 
 dates  = []
 trn_dates = []
@@ -229,15 +233,22 @@ print(count_file)
 print(len(df['body']))
 print(len(df['thread_no'].unique()))
 print(len(df['replier'].unique()))
-rep_to_index = {}
-index = 0
-for rep in users:
-    if rep_to_index.get(rep, 0) == 0:
-        rep_to_index[rep] = index
-        index += 1
+
+#rep_to_index1 = {}
+#index = 0
+#for rep in users:
+#    if rep_to_index1.get(rep, 0) == 0:
+#        rep_to_index1[rep] = index
+#        index += 1
+#pprint(rep_to_index1)
+#nile.write('\n\n\n\n')
+#nile.write(f'{rep_to_index}\n\n')
+
+
+rep_to_index = np.load('temp.npy')
+rep_to_index = rep_to_index.tolist()
 pprint(rep_to_index)
-nile.write('\n\n\n\n')
-nile.write(f'{rep_to_index}\n\n')
+print(len(rep_to_index))
 
 for rep in df_trn['replier']:
     df_trn.loc[df_trn['replier']==rep,'int_replier'] = rep_to_index[rep]
@@ -254,6 +265,7 @@ df_tst['int_replier'] = df_tst.groupby('thread_no')['int_replier'].shift(-1)
 
 df_trn['replier'] = df_trn.groupby('thread_no')['replier'].shift(-1)
 df_trn['int_replier'] = df_trn.groupby('thread_no')['int_replier'].shift(-1)
+
 
 df_tst.dropna(inplace=True)
 df_trn.dropna(inplace=True)
@@ -309,11 +321,21 @@ for w in tst_users:
 # In[6]:
 
 
-user_vec_len = max(user_indices) + 1
-
+user_vec_len = len(rep_to_index) + 1
+print("User vec len: "+str(user_vec_len))
 
 # In[7]:
 
+interaction_matrix = np.load('mymatrix.dat')
+print("mtrxshape")
+print(interaction_matrix.shape)
+
+G=nx.from_numpy_matrix(interaction_matrix, parallel_edges=False, create_using=nx.DiGraph())
+G.edges(data=True)
+
+index_list=[]
+for i in range(0, user_vec_len):
+	index_list.append(i)
 
 import math
 indexx=0
@@ -340,6 +362,16 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
                 # decay_value = math.exp(-total_seconds)
                 # print(str(decay_value))
             array[trn_user_indices[j]] = 1
+            
+            personal_df = pd.DataFrame({'user_index':index_list, 'prev_participants':list(array)})
+
+            personalization = personal_df.set_index('user_index')['prev_participants'].to_dict()
+            ppr = nx.pagerank(G, alpha = 0.8, personalization = personalization)
+            
+            ppr_value = ppr[trn_user_indices[j]]
+            print(ppr_value)
+            array[trn_user_indices[j]] = ppr_value
+
             weight_list.append(list(array))
             indexx+=1
 
@@ -374,6 +406,16 @@ for i in range(0, len(df_tst.groupby("thread_no"))):
                 # decay_value = math.exp(-total_seconds)
                 # print(str(decay_value))
             array[tst_user_indices[j]] = 1
+
+            personal_df = pd.DataFrame({'user_index':index_list, 'prev_participants':list(array)})
+
+            personalization = personal_df.set_index('user_index')['prev_participants'].to_dict()
+            ppr = nx.pagerank(G, alpha = 0.8, personalization = personalization)
+            
+            ppr_value = ppr[trn_user_indices[j]]
+            print(ppr_value)
+            array[trn_user_indices[j]] = ppr_value
+
             weight_list.append(list(array))
             indexx+=1
 
@@ -386,7 +428,7 @@ tst_weights = np.array(weight_list)
 
 print(trn_weights.shape)
 print(type(trn_weights))
-# trn_weights.tofile('/home/niki/user_weights.dat')
+# trn_weights.tofile('/home/parth/user_weights.dat')
 np.save(USER_TRAIN, trn_weights)  
 np.save(USER_TEST, tst_weights)  
 
@@ -432,7 +474,6 @@ class VectorizeData(Dataset):
 # In[11]:
 
 
-#ds = VectorizeData(file_name2)
 dtrain = VectorizeData(file_name)
 dtest = VectorizeData(file_name1)
 
