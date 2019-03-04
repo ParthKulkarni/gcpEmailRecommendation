@@ -234,16 +234,6 @@ print(len(df['body']))
 print(len(df['thread_no'].unique()))
 print(len(df['replier'].unique()))
 
-#rep_to_index1 = {}
-#index = 0
-#for rep in users:
-#    if rep_to_index1.get(rep, 0) == 0:
-#        rep_to_index1[rep] = index
-#        index += 1
-#pprint(rep_to_index1)
-#nile.write('\n\n\n\n')
-#nile.write(f'{rep_to_index}\n\n')
-
 
 rep_to_index = np.load('temp.npy')
 rep_to_index = rep_to_index.tolist()
@@ -376,7 +366,6 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
             indexx+=1
 
 trn_weights = np.array(weight_list)
-#print(trn_weights)
 
 
 # In[8]:
