@@ -10,6 +10,7 @@ import glob
 import string
 from pprint import pprint
 from collections import Counter, OrderedDict
+from collections import defaultdict
 
 import spacy
 nlp = spacy.load('en',disable=['parser', 'tagger', 'ner'])
@@ -48,7 +49,7 @@ PATH = BASE_PATH + '/0model.pt1model.pt2model.pt3model.pt4model.pt5model.pt6mode
 TEST_PATH  = '/home/niki/test2.pkl'
 USER_TEST  = '/home/niki/user_weights_test2.npy'
 REM_PATH = '/home/niki/users2.pkl'
-
+THREAD_DICT = 'thread_dict.pkl'
 nile = open('debug-test.txt','w')
 
 # In[2]:
@@ -80,7 +81,8 @@ class VectorizeData(Dataset):
         X = self.df.bodyidx[idx]
         lens = self.df.lengths[idx]
         y = self.df.int_replier[idx]
-        return X,y,lens
+        tid = self.df.thread_no[idx]
+        return X,y,lens,tid
 
     def pad_data(self, s):
         padded = np.zeros((self.maxlen,), dtype=np.int64)
@@ -150,7 +152,7 @@ model.eval()
 
 # In[11]:
 
-
+thread_map = defaultdict(list)
 test_dl= DataLoader(dtest, batch_size=1)
 num_batches = len(test_dl)
 y_true_test1 = list()
@@ -162,6 +164,7 @@ for we, w in zip(tt,tst_weights):
     X = we[0]
     y = we[1]
     lengths = we[2]
+    thread_id = we[3]
 
     w = w.reshape(-1,1)
     w = w.transpose()
@@ -185,6 +188,7 @@ for we, w in zip(tt,tst_weights):
 
     pred = pred.sort()
     array = pred[1][0][-20:]
+    thread_map[thread_id].extend(array)
     if y in array:
     	hit += 1
 
@@ -203,4 +207,8 @@ print('\n')
 nile.write(f'Test loss: {train_loss}\n')
 nile.write(f'Accuracy : {accuracy}')
 nile.write(f'\n\n')
+
+riley = open(THREAD_DICT,'wb')
+pickle.dump(thread_map,riley)
+riley.close()
 
