@@ -44,13 +44,13 @@ torch.manual_seed(42)
 
 
 # In[16]:
-TRAIN_PATH = '/home/niki/train1.pkl'
-USER_TRAIN = '/home/niki/user_weights1.npy'
+TRAIN_PATH = '/home/niki/train2.pkl'
+USER_TRAIN = '/home/niki/user_weights2.npy'
 BASE_PATH = '/home/niki'
 PATH = BASE_PATH + '/'
-REM_PATH = '/home/niki/users.pkl'
+REM_PATH = '/home/niki/users2.pkl'
 
-user_vec_len = 659
+user_vec_len = 1773
 
 nile = open('debug-train.txt','w')
 # In[2]:
@@ -66,7 +66,7 @@ trn_weights = np.load(USER_TRAIN)
 class VectorizeData(Dataset):
 	def __init__(self, df_path, maxlen=300):
 		self.df = pd.read_pickle(df_path)
-		self.maxlen = 300
+		self.maxlen = 1000
 		print(self.df)
 
 	def __len__(self):
@@ -94,7 +94,7 @@ dtrain = VectorizeData(TRAIN_PATH)
 # In[9]:
 
 
-input_size = 300
+input_size = 1000
 hidden_size = 50
 num_classes = user_vec_len
 num_epochs = 20 
@@ -202,10 +202,11 @@ for epoch in range(num_epochs):
     nile.write(f' Epoch {epoch}\nTrain loss: {train_loss}\n')
     nile.write(f'Accuracy : {accuracy}')
     nile.write(f'\n\n')
-    if epoch % 5 == 0 :
-        model_name = f'{epoch}model.pt'
-        PATH = PATH + model_name
-        torch.save(model.state_dict(),PATH)
+#    if epoch % 5 == 0 :
+    model_name = ''
+    model_name = f'{epoch}model.pt'
+    PATH = PATH + model_name
+    torch.save(model.state_dict(),PATH)
 nile.close()
 # architecture 
 # loading pickle file and predict

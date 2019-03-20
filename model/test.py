@@ -43,18 +43,18 @@ warnings.filterwarnings('ignore')
 torch.manual_seed(42)
 
 BASE_PATH = '/home/niki'
-PATH = BASE_PATH + '/second_model.pt'
+PATH = BASE_PATH + '/0model.pt1model.pt2model.pt3model.pt4model.pt5model.pt6model.pt7model.pt8model.pt9model.pt10model.pt11model.pt12model.pt13model.pt14model.pt15model.pt16model.pt17model.pt18model.pt19model.pt'
 
-TEST_PATH  = '/home/niki/test1.pkl'
-USER_TEST  = '/home/niki/user_weights_test1.npy'
-REM_PATH = '/home/niki/users.pkl'
+TEST_PATH  = '/home/niki/test2.pkl'
+USER_TEST  = '/home/niki/user_weights_test2.npy'
+REM_PATH = '/home/niki/users2.pkl'
 
 nile = open('debug-test.txt','w')
 
 # In[2]:
 
 
-user_vec_len = 659
+user_vec_len = 1773
 
 
 # In[5]:
@@ -70,7 +70,7 @@ tst_weights = np.load(USER_TEST)
 class VectorizeData(Dataset):
     def __init__(self, df_path, maxlen=300):
         self.df = pd.read_pickle(df_path)
-        self.maxlen = 300
+        self.maxlen = 1000
         print(self.df)
         
     def __len__(self):
@@ -98,7 +98,7 @@ dtest = VectorizeData(TEST_PATH)
 # In[8]:
 
 
-input_size = 300
+input_size = 1000
 hidden_size = 50
 num_classes = user_vec_len
 num_epochs = 5
@@ -184,7 +184,7 @@ for we, w in zip(tt,tst_weights):
     pred_idx = torch.max(pred, dim=1)[1]
 
     pred = pred.sort()
-    array = pred[1][0][-3:]
+    array = pred[1][0][-20:]
     if y in array:
     	hit += 1
 

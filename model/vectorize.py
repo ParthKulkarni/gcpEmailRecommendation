@@ -59,18 +59,20 @@ torch.manual_seed(42)
 BASE_PATH = '/home/niki/gcpEmailRecommendation'
 doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
 folder_path = "/home/niki/Dataset_1_removed/*"
-file_name = BASE_PATH + "/model/dataframe9_tfidf.csv"
-file_name1 = BASE_PATH + "/model/dataframe10_tfidf.csv"
-file_name2 = BASE_PATH + "/model/dataframe11_tfidf.csv"
+#folder_path = "/home/niki/gcpEmailRecommendation/Scraping/mini_deb/*"
+file_name = "dataframe9_tfidf.csv"
+file_name1 = "dataframe10_tfidf.csv"
+file_name2 = "dataframe11_tfidf.csv"
 sys.path.insert(0, BASE_PATH + '/Preprocessing')
-PATH = BASE_PATH + '/model/second_model.pickle'
-TRAIN_PATH = '/home/niki/train2.pkl'
-TEST_PATH  = '/home/niki/test2.pkl'
-TFIDF_PATH = '/home/niki/tfidf.pkl'
-USER_TRAIN = '/home/niki/user_weights2.npy'
-USER_TEST  = '/home/niki/user_weights_test2.npy'
-REM_PATH = '/home/niki/users2.pkl'
-
+#PATH = BASE_PATH + '/model/second_model.pickle'
+TRAIN_PATH = 'train2.pkl'
+TEST_PATH  = 'test2.pkl'
+#TFIDF_PATH = 'tfidf.pkl'
+USER_TRAIN = 'user_weights2.npy'
+USER_TEST  = 'user_weights_test2.npy'
+REM_PATH = 'users2.pkl'
+USER_DICT = 'userdict.pkl'
+MATRIX_DAT = BASE_PATH + '/matrix.dat'
 
 import preprocessing
 import read_file
@@ -280,14 +282,14 @@ print(len(df['body']))
 print(len(df['thread_no'].unique()))
 print(len(df['replier'].unique()))
 
-
+rep_to_index = {}
 index = 0
 for rep in users:
     if rep_to_index.get(rep, 0) == 0:
         rep_to_index[rep] = index
         index += 1
 
-jimm = open('userdict.pkl','wb')
+jimm = open(USER_DICT,'wb')
 pickle.dump(rep_to_index,jimm)
 jimm.close()
 
@@ -371,7 +373,7 @@ print("User vec len: "+str(user_vec_len))
 
 # In[7]:
 
-interaction_matrix = np.load('mymatrix.dat')
+interaction_matrix = np.load(MATRIX_DAT)
 print("mtrxshape")
 print(interaction_matrix.shape)
 
@@ -494,7 +496,7 @@ class VectorizeData(Dataset):
         print('Indexing...')
 
         tfidf = TfidfVectorizer(lowercase = True, max_features = 1000, max_df = 0.85)
-        self.df['bodyidx'] = list(tfidf.fit_transform(df['body']).toarray())
+        self.df['bodyidx'] = list(tfidf.fit_transform(self.df['body']).toarray())
         
         print('Calculating lengths')
         self.df['lengths'] = self.df.bodyidx.apply(len)
@@ -533,9 +535,9 @@ dtest = VectorizeData(file_name1)
 # In[12]:
 
 
-#dtrain.df.to_pickle(TRAIN_PATH)
-#dtest.df.to_pickle(TEST_PATH)
-ds.df.to_pickle(TFIDF_PATH)
+dtrain.df.to_pickle(TRAIN_PATH)
+dtest.df.to_pickle(TEST_PATH)
+#ds.df.to_pickle(TFIDF_PATH)
 
 # In[13]:
 nile.close()
