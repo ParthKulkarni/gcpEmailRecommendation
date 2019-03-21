@@ -197,6 +197,7 @@ for we, w in zip(tt,tst_weights):
     y_pred_test1 += list(pred_idx.cpu().data.numpy())
     print(loss.item())
     total_loss_test += loss.item()
+    break
 
 accuracy = float(hit)/float(len(test_dl))
 train_acc = accuracy_score(y_true_test1, y_pred_test1)
