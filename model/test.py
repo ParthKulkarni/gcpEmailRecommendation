@@ -51,6 +51,7 @@ USER_TEST  = '/home/niki/user_weights_test2.npy'
 REM_PATH = '/home/niki/users2.pkl'
 THREAD_DICT = 'thread_dict.pkl'
 nile = open('debug-test.txt','w')
+USER_LIMIT = 30
 
 # In[2]:
 
@@ -188,7 +189,18 @@ for we, w in zip(tt,tst_weights):
 
     pred = pred.sort()
     array = pred[1][0][-20:]
-    thread_map[thread_id].extend(array)
+    # thread_map[thread_id].extend(array)
+    print(thread_id)
+    print("ARRAY")
+    print(array)
+    for i in array:
+        if i not in thread_map[thread_id]:
+            if len(thread_map[thread_id]) + 1> limit :
+                thread_map[thread_id].pop(0)
+                thread_map[thread_id].append(i)
+            else :
+                thread_map[thread_id].append(i)
+            # print(thread_map[thread_id])
     if y in array:
     	hit += 1
 
@@ -208,7 +220,7 @@ nile.write(f'Test loss: {train_loss}\n')
 nile.write(f'Accuracy : {accuracy}')
 nile.write(f'\n\n')
 
-print(thread_map)
+# print(thread_map)
 riley = open(THREAD_DICT,'wb')
 pickle.dump(thread_map,riley)
 riley.close()
