@@ -208,6 +208,7 @@ nile.write(f'Test loss: {train_loss}\n')
 nile.write(f'Accuracy : {accuracy}')
 nile.write(f'\n\n')
 
+print(thread_map)
 riley = open(THREAD_DICT,'wb')
 pickle.dump(thread_map,riley)
 riley.close()
