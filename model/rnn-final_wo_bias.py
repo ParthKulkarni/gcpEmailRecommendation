@@ -51,7 +51,10 @@ vector_length = 1000
 
 
 # In[16]:
-
+Wxh = np.random.randn(hidden_size, vector_length) * 0.01 #input to hidden
+Whh = np.random.randn(hidden_size, hidden_size) * 0.01 #input to hidden
+Why = np.random.randn(vector_length, hidden_size) * 0.01 #input to hidden
+hprev = np.zeros((hidden_size,1))
 
 print('Wxh : ',Wxh.shape)
 print('Whh : ',Whh.shape)
@@ -119,19 +122,20 @@ def lossFun(inputs, targets, hprev):
 
 
 num_epochs = 10
-for iter in range(num_epochs):
-    Wxh = np.random.randn(hidden_size, vector_length) * 0.01 #input to hidden
-    Whh = np.random.randn(hidden_size, hidden_size) * 0.01 #input to hidden
-    Why = np.random.randn(vector_length, hidden_size) * 0.01 #input to hidden
-    bh = np.zeros((hidden_size, 1))
-    by = np.zeros((vector_length, 1))
-    hprev = np.zeros((hidden_size,1))
+# for iter in range(num_epochs):
+#     Wxh = np.random.randn(hidden_size, vector_length) * 0.01 #input to hidden
+#     Whh = np.random.randn(hidden_size, hidden_size) * 0.01 #input to hidden
+#     Why = np.random.randn(vector_length, hidden_size) * 0.01 #input to hidden
+#     bh = np.zeros((hidden_size, 1))
+#     by = np.zeros((vector_length, 1))
+#     hprev = np.zeros((hidden_size,1))
 
-    n = 0
+#     n = 0
     mWxh, mWhh, mWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
 #     mbh, mby = np.zeros_like(bh), np.zeros_like(by) # memory variables for Adagrad                                                                                                                
     smooth_loss = -np.log(1.0/vector_length)*seq_length # loss at iteration 0 
-
+for iter in range(num_epochs):
+	n=0
     while n< len(tfidf):
         # checking mail length is greater than 2
         if(len(tfidf[n]) < 2) :
