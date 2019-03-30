@@ -130,10 +130,10 @@ num_epochs = 10
 #     by = np.zeros((vector_length, 1))
 #     hprev = np.zeros((hidden_size,1))
 
-#     n = 0
-    mWxh, mWhh, mWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
+n = 0
+mWxh, mWhh, mWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
 #     mbh, mby = np.zeros_like(bh), np.zeros_like(by) # memory variables for Adagrad                                                                                                                
-    smooth_loss = -np.log(1.0/vector_length)*seq_length # loss at iteration 0 
+smooth_loss = -np.log(1.0/vector_length)*seq_length # loss at iteration 0 
 for iter in range(num_epochs):
 	n=0
     while n< len(tfidf):
