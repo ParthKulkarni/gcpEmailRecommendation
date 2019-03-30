@@ -8,12 +8,12 @@ import numpy as np
 import pandas as pd
 import pickle
 import math
-
+from pprint import pprint 
 
 # In[107]:
 
 
-TRAIN_PATH = 'train2.pkl'
+TRAIN_PATH = '/home/niki/train2.pkl'
 
 
 # In[108]:
@@ -46,12 +46,18 @@ print(len(tfidf))
 #model parameters
 hidden_size = 100
 seq_length = 5
-learning_rate = 1e-1
+learning_rate = 1e-3
 vector_length = 1000
 
 
 # In[112]:
 
+Wxh = np.random.randn(hidden_size, vector_length) * 0.01 #input to hidden
+Whh = np.random.randn(hidden_size, hidden_size) * 0.01 #input to hidden
+Why = np.random.randn(vector_length, hidden_size) * 0.01 #input to hidden
+bh = np.zeros((hidden_size, 1))
+by = np.zeros((vector_length, 1))
+hprev = np.zeros((hidden_size,1))
 
 print('Wxh : ',Wxh.shape)
 print('Whh : ',Whh.shape)
@@ -118,20 +124,21 @@ def lossFun(inputs, targets, hprev):
 # In[117]:
 
 
-num_epochs = 1
+num_epochs = 10
+#for iter in range(num_epochs):
+   # Wxh = np.random.randn(hidden_size, vector_length) * 0.01 #input to hidden
+   # Whh = np.random.randn(hidden_size, hidden_size) * 0.01 #input to hidden
+   # Why = np.random.randn(vector_length, hidden_size) * 0.01 #input to hidden
+   # bh = np.zeros((hidden_size, 1))
+   # by = np.zeros((vector_length, 1))
+   # hprev = np.zeros((hidden_size,1))
+
+n = 0
+mWxh, mWhh, mWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
+mbh, mby = np.zeros_like(bh), np.zeros_like(by) # memory variables for Adagrad                                                                                                                
+smooth_loss = -np.log(1.0/vector_length)*seq_length # loss at iteration 0 
 for iter in range(num_epochs):
-    Wxh = np.random.randn(hidden_size, vector_length) * 0.01 #input to hidden
-    Whh = np.random.randn(hidden_size, hidden_size) * 0.01 #input to hidden
-    Why = np.random.randn(vector_length, hidden_size) * 0.01 #input to hidden
-    bh = np.zeros((hidden_size, 1))
-    by = np.zeros((vector_length, 1))
-    hprev = np.zeros((hidden_size,1))
-
     n = 0
-    mWxh, mWhh, mWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
-    mbh, mby = np.zeros_like(bh), np.zeros_like(by) # memory variables for Adagrad                                                                                                                
-    smooth_loss = -np.log(1.0/vector_length)*seq_length # loss at iteration 0 
-
     while n< len(tfidf):
         # checking mail length is greater than 2
         if(len(tfidf[n]) < 2) :
@@ -156,7 +163,7 @@ for iter in range(num_epochs):
 
         # creating input output pairs
         # forward seq_length characters through the net and fetch gradient 
-        print('Length : ',length)
+        #print('Length : ',length)
         if(length > seq_length):
             s_len = 0
             f1 = 0
@@ -166,8 +173,8 @@ for iter in range(num_epochs):
                     break
                 inputs = mails[:,s_len:s_len + seq_length]
                 targets = mails[:,s_len + 1 :s_len + seq_length + 1]
-                print(s_len,' ',s_len + seq_length)
-                print(s_len + 1,' ',s_len + seq_length + 1)
+                #print(s_len,' ',s_len + seq_length)
+                #print(s_len + 1,' ',s_len + seq_length + 1)
                 s_len += seq_length
                 loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
                 smooth_loss = smooth_loss * 0.999 + loss * 0.001
@@ -175,15 +182,17 @@ for iter in range(num_epochs):
 #             if (f1 == 1):
             inputs = mails[:,length -seq_length - 1 :length-1]
             targets = mails[:,length -seq_length  :length]
-            print(length -seq_length - 1 ,' ',length-1)
-            print(length -seq_length,' ',length)
+            #print(length -seq_length - 1 ,' ',length-1)
+            #print(length -seq_length,' ',length)
+            #print('inputs')
+            #print(inputs)
             loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
             smooth_loss = smooth_loss * 0.999 + loss * 0.001
 
         else :
             inputs = mails[:,:-1]
             targets = mails[:,1:]
-            print(len(mails[0]))
+            #print(len(mails[0]))
             loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
             smooth_loss = smooth_loss * 0.999 + loss * 0.001
 
