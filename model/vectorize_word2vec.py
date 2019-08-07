@@ -36,7 +36,7 @@ from tqdm import tqdm, tqdm_notebook, tnrange
 tqdm.pandas(desc='Progress')
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
-from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 import torch
 import torch.nn as nn
@@ -56,69 +56,25 @@ import warnings
 warnings.filterwarnings('ignore')
 torch.manual_seed(42)
 
-BASE_PATH = '/home/niki/gcpEmailRecommendation'
-doc2vec_path="/home/niki/apnews_dbow/doc2vec.bin"
-folder_path = "/home/niki/Dataset_1_removed/*"
-#folder_path = "/home/niki/gcpEmailRecommendation/Scraping/mini_deb/*"
-file_name = "dataframe9_tfidf.csv"
-file_name1 = "dataframe10_tfidf.csv"
-file_name2 = "dataframe11_tfidf.csv"
+BASE_PATH = '/home/parth/BE_Project/gcpEmailRecommendation'
+doc2vec_path="/home/parth/apnews_dbow/doc2vec.bin"
+folder_path = "/home/parth/BE_Project/gcpEmailRecommendation/Scraping/mini_deb/*"
+file_name = BASE_PATH + "/model/dataframe9.csv"
+file_name1 = BASE_PATH + "/model/dataframe10.csv"
+file_name2 = BASE_PATH + "/model/dataframe11.csv"
 sys.path.insert(0, BASE_PATH + '/Preprocessing')
-#PATH = BASE_PATH + '/model/second_model.pickle'
-TRAIN_PATH = 'train2.pkl'
-TEST_PATH  = 'test2.pkl'
-#TFIDF_PATH = 'tfidf.pkl'
-USER_TRAIN = 'user_weights2.npy'
-USER_TEST  = 'user_weights_test2.npy'
-REM_PATH = 'users2.pkl'
-USER_DICT = 'userdict.pkl'
-MATRIX_DAT = BASE_PATH + '/matrix.dat'
+PATH = BASE_PATH + '/model/second_model.pickle'
+TRAIN_PATH = '/home/parth/train2.pkl'
+TEST_PATH  = '/home/parth/test2.pkl'
+USER_TRAIN = '/home/parth/user_weights_ppr.npy'
+USER_TEST  = '/home/parth/user_weights_test_ppr.npy'
+REM_PATH = '/home/parth/users2.pkl'
 
 import preprocessing
 import read_file
 import datetime
 
 nile = open('debug.txt','w')
-
-import random
-
-def read_content_long_msg(content) :
-# returns the minimized content for long msg body
-    sentence_limit = 12
-    content1 = ''
-    lines = content.split('.')
-    if len(lines) < sentence_limit :
-        return content
-    start = 0
-    if lines[0].startswith('On') and lines[0].endswith('wrote:') :
-        start = 1
-    for x in range(start, start + 3) :
-        content1 += lines[x]
-
-    start = start + 4
-    end = len(lines) - 4
-    short_list = []
-    for x in range(3) :
-        short_list.append(random.randint(start, end))
-    short_list.sort()
-    for x in range(3) :
-        content1 += lines[short_list[x]]
-                                                                                                                        
-    start = len(lines) - 4
-    for x in range(start, start + 3) :
-        content1 += lines[x]
-    return content1
-
-def read_content_noshort_msg(content) :
-    # returns true if this msg body has to be taken, false otherwise
-    sentence_limit = 3
-    words_limit = 50
-    lines = content.split('.')
-    if len(lines) < sentence_limit :
-        words = content.split(' ')
-        if len(words) < words_limit :
-            return False
-    return True
 
 def extract_debian(text):
     text = text.split('\n\n\n')
@@ -206,11 +162,7 @@ for thr in thread_list:
         temp = ''
         sender = mail['From'].split('<')[0].strip()
         temp   = mail['content']
-        original = temp
         temp = deb_toppostremoval(temp)
-        if read_content_noshort_msg(temp) == False :
-            continue
-        temp = read_content_long_msg(temp)
         temp = deb_lemmatize(temp)
         temp = clean_debian(temp)
         if temp == '':
@@ -218,13 +170,13 @@ for thr in thread_list:
             continue
         
         temp = obj.replace_tokens(temp)
-        df = df.append({'mail': original,'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+        df = df.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
         if flag==0:
             start_date = datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')
             if start_date > split_date:
-                df_tst = df_tst.append({'mail': original,'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
+                df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
             else:
-                df_trn = df_trn.append({'mail': original,'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
+                df_trn = df_trn.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':start_date}, ignore_index=True)
             t = temp
             flag = 1
             continue
@@ -233,9 +185,9 @@ for thr in thread_list:
 
         if start_date <= split_date:
             t = t + temp
-            df_trn = df_trn.append({'mail': original,'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
+            df_trn = df_trn.append({'body': str(t),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)
         else:
-            df_tst = df_tst.append({'mail': original,'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)       
+            df_tst = df_tst.append({'body': str(temp),'replier':sender, 'thread_no':th_no, 'start_date':start_date, 'cur_date':datetime.datetime.strptime(mail['Date'].split('(')[0].rstrip(),'%a, %d %b %Y %H:%M:%S %z')}, ignore_index=True)       
     th_no += 1
 
 qw = df.groupby(['replier']).size().reset_index(name='counts')
@@ -285,17 +237,18 @@ print(len(df['replier'].unique()))
 rep_to_index = {}
 index = 0
 for rep in users:
-    if rep_to_index.get(rep, 0) == 0:
-        rep_to_index[rep] = index
-        index += 1
-
-jimm = open(USER_DICT,'wb')
-pickle.dump(rep_to_index,jimm)
-jimm.close()
-
-# pprint(rep_to_index)
+   if rep_to_index.get(rep, 0) == 0:
+       rep_to_index[rep] = index
+       index += 1
+pprint(rep_to_index)
 nile.write('\n\n\n\n')
 nile.write(f'{rep_to_index}\n\n')
+
+
+# rep_to_index = np.load('temp.npy')
+# rep_to_index = rep_to_index.tolist()
+# pprint(rep_to_index)
+# print(len(rep_to_index))
 
 for rep in df_trn['replier']:
     df_trn.loc[df_trn['replier']==rep,'int_replier'] = rep_to_index[rep]
@@ -326,25 +279,48 @@ df.to_csv(file_name2)
 # In[4]:
 
 
-# words = Counter()
-# for sent in df_trn.body.values:
-#     words.update(w.text.lower() for w in nlp(sent))
+words = Counter()
+for sent in df_trn.body.values:
+    words.update(w.text.lower() for w in nlp(sent))
 
-# words = sorted(words, key=words.get, reverse=True)
-# #print(words)
-# words = ['_PAD','_UNK'] + words
+words = sorted(words, key=words.get, reverse=True)
+#print(words)
+words = ['_PAD','_UNK'] + words
 
-# word2idx = {o:i for i,o in enumerate(words)}
-# idx2word = {i:o for i,o in enumerate(words)}
+word2idx = {o:i for i,o in enumerate(words)}
+idx2word = {i:o for i,o in enumerate(words)}
 
-# #@jit
-# def indexer(s):
-#     start_alpha=0.01
-#     infer_epoch=1000
-#     m = gensim.models.Doc2Vec.load(doc2vec_path)
-#     Document_vector = [x for x in m.infer_vector(s, alpha=start_alpha, steps=infer_epoch)]
-#     print('we are working')
-#     return Document_vector
+#@jit
+def indexer(s):
+    start_alpha=0.01
+    infer_epoch=1000
+    model = gensim.models.KeyedVectors.load_word2vec_format('/home/parth/BE_Project/Word2vec/GoogleNews-vectors-negative300.bin', binary=True)
+    
+    doc_vec = np.zeros(300)
+
+    print(s)
+    words = s.split(" ")
+    print(words)
+
+    word_vecs = []
+
+    for word in words:
+        word_vec = model[word]
+        print(word)
+        print(word_vec)
+        word_vecs.apppend(word_vec)
+    #print(word_vecs)
+    
+    for word_vec in word_vecs:
+        doc_vec = np.add(doc_vec, word_vec)
+
+    doc_vec = np.asarray(doc_vec) / len(words)
+
+    print("-------------------------------")
+    print(doc_vec)
+
+    print('we are working')
+    return doc_vec
 
 
 # In[5]:
@@ -373,16 +349,16 @@ print("User vec len: "+str(user_vec_len))
 
 # In[7]:
 
-interaction_matrix = np.load(MATRIX_DAT)
-print("mtrxshape")
-print(interaction_matrix.shape)
+# interaction_matrix = np.load('mymatrix.dat')
+# print("mtrxshape")
+# print(interaction_matrix.shape)
 
-G=nx.from_numpy_matrix(interaction_matrix, parallel_edges=False, create_using=nx.DiGraph())
-G.edges(data=True)
+# G=nx.from_numpy_matrix(interaction_matrix, parallel_edges=False, create_using=nx.DiGraph())
+# G.edges(data=True)
 
 index_list=[]
 for i in range(0, user_vec_len):
-    index_list.append(i)
+	index_list.append(i)
 
 import math
 indexx=0
@@ -410,19 +386,20 @@ for i in range(0, len(df_trn.groupby("thread_no"))):
                 # print(str(decay_value))
             array[trn_user_indices[j]] = 1
             
-            personal_df = pd.DataFrame({'user_index':index_list, 'prev_participants':list(array)})
+            # personal_df = pd.DataFrame({'user_index':index_list, 'prev_participants':list(array)})
 
-            personalization = personal_df.set_index('user_index')['prev_participants'].to_dict()
-            ppr = nx.pagerank(G, alpha = 0.8, personalization = personalization)
+            # personalization = personal_df.set_index('user_index')['prev_participants'].to_dict()
+            # ppr = nx.pagerank(G, alpha = 0.8, personalization = personalization)
             
-            ppr_value = ppr[trn_user_indices[j]]
-            print(ppr_value)
-            array[trn_user_indices[j]] = ppr_value
+            # ppr_value = ppr[trn_user_indices[j]]
+            # print(ppr_value)
+            # array[trn_user_indices[j]] = ppr_value
 
             weight_list.append(list(array))
             indexx+=1
 
 trn_weights = np.array(weight_list)
+#print(trn_weights)
 
 
 # In[8]:
@@ -453,14 +430,14 @@ for i in range(0, len(df_tst.groupby("thread_no"))):
                 # print(str(decay_value))
             array[tst_user_indices[j]] = 1
 
-            personal_df = pd.DataFrame({'user_index':index_list, 'prev_participants':list(array)})
+            # personal_df = pd.DataFrame({'user_index':index_list, 'prev_participants':list(array)})
 
-            personalization = personal_df.set_index('user_index')['prev_participants'].to_dict()
-            ppr = nx.pagerank(G, alpha = 0.8, personalization = personalization)
+            # personalization = personal_df.set_index('user_index')['prev_participants'].to_dict()
+            # ppr = nx.pagerank(G, alpha = 0.8, personalization = personalization)
             
-            ppr_value = ppr[trn_user_indices[j]]
-            print(ppr_value)
-            array[trn_user_indices[j]] = ppr_value
+            # ppr_value = ppr[trn_user_indices[j]]
+            # print(ppr_value)
+            # array[trn_user_indices[j]] = ppr_value
 
             weight_list.append(list(array))
             indexx+=1
@@ -474,15 +451,9 @@ tst_weights = np.array(weight_list)
 
 print(trn_weights.shape)
 print(type(trn_weights))
-
-# trn_weights.tofile('/home/niki/user_weights.dat')
-#np.save(USER_TRAIN, trn_weights)  
-#np.save(USER_TEST, tst_weights)  
-
-
+# trn_weights.tofile('/home/parth/user_weights.dat')
 np.save(USER_TRAIN, trn_weights)  
 np.save(USER_TEST, tst_weights)  
-
 
 
 # In[10]:
@@ -490,17 +461,21 @@ np.save(USER_TEST, tst_weights)
 
 # embedding |> flag
 class VectorizeData(Dataset):
-    def __init__(self, df_path, maxlen=1000):
+    def __init__(self, df_path, maxlen=300):
         self.df = pd.read_csv(df_path, error_bad_lines=False)
-        self.df['body'] = self.df.body.apply(lambda x: str(x).strip())
+        self.df['body'] = self.df.body.apply(lambda x: x.strip())
         print('Indexing...')
-
-        tfidf = TfidfVectorizer(lowercase = True, max_features = 1000, max_df = 0.85)
-        self.df['bodyidx'] = list(tfidf.fit_transform(self.df['body']).toarray())
-        
+        self.df['bodyidx'] = dd.from_pandas(self.df,npartitions=nCores).map_partitions(
+          lambda dp : dp.apply(
+             lambda x : indexer(x.body),axis=1)).\
+        compute(scheduler='processes')
         print('Calculating lengths')
         self.df['lengths'] = self.df.bodyidx.apply(len)
-        self.maxlen = 1000
+#         if calc_maxlen == True:
+#             self.maxlen = max(self.df['lengths'])
+#         else:
+#             self.maxlen = maxlen
+        self.maxlen = 300
         print(self.df)
         
     def __len__(self):
@@ -522,14 +497,8 @@ class VectorizeData(Dataset):
 # In[11]:
 
 
-
-#ds = VectorizeData(file_name2)
-#dtrain = VectorizeData(file_name)
-#dtest = VectorizeData(file_name1)
-
 dtrain = VectorizeData(file_name)
 dtest = VectorizeData(file_name1)
-
 
 
 # In[12]:
@@ -537,9 +506,10 @@ dtest = VectorizeData(file_name1)
 
 dtrain.df.to_pickle(TRAIN_PATH)
 dtest.df.to_pickle(TEST_PATH)
-#ds.df.to_pickle(TFIDF_PATH)
+
 
 # In[13]:
-nile.close()
+
 
 print(user_vec_len)
+

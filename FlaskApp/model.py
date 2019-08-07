@@ -1,36 +1,49 @@
-import random
-from ast import literal_eval
+import pickle
+import operator
 
-class model :
+class Recom :
     def __init__(self) :
-        self.li_name = []
-        self.user_prediction = {}
-        self.f = open("debug.txt", "r")  
-        self.user = literal_eval(self.f.read())
+        #self.threadDictPath = "Data/thread_dict.pkl"
+        self.userDictPath = "Data/userdict.pkl"
+        #self.testingDataPath = "Data/test2.pkl"
+        #self.trainingDataPath = "Data/train2.pkl"
+
+        # self.threadDict = pickle.load(open(self.threadDictPath, "rb"))
+        self.userDict = pickle.load(open(self.userDictPath, "rb"))
+        # self.testingData = pickle.load(open(self.testingDataPath, "rb"))
+        # self.trainingData = pickle.load(open(self.trainingDataPath, "rb"))
+        # print(self.threadDict)
+
+    def getThreads(self, userName) :
+        userId = self.userDict.get(userName, 10000)
+        threadList = []
+        if userId != 10000 :
+            print(userId)
+            for key, value in self.threadDict.items() :
+                if userId in value :
+                    threadList.append(key+1)
+        return threadList
 
 
-    def generate_random_list(self) :
-        li = []
-        for x in range (10) :
-            li.append((random.randint(0, 100)) % 2)
+    # def getThreadIds(self) :
+    #     threadList = []
+    #     for key, value in self.threadDict.items() :
+    #         threadList.append(key)
+    #     return threadList
 
-        for x in range (10) :
-            if li[x] == 1 :
-                self.li_name.append(x)
-        return self.li_name
+        
+    # def getPopularThreads(self) :
+    #     threadList = []
+    #     tempDict = {}
+    #     for key, values in self.threadDict.items() :
+    #         tempDict[key] = len(values)
+        
+    #     sorted_thread = sorted(tempDict.items(), key = lambda kv: kv[1])
+    #     print(len(sorted_thread))
 
-	
-    def map_user_to_thread(self) :
-        temp_thread_id = 50
-        print(self.li_name)
-        for name_id in self.li_name :
-            list = self.user_prediction.get(name_id, [])
-            list.append(temp_thread_id)
-            self.user_prediction[name_id] = list
-        print(self.user_prediction)         
-		
-# ob = model()
-# ob.generate_random_list()
-# ob.map_user_to_thread()
-# ob.generate_random_list()
-# ob.map_user_to_thread()
+
+
+
+# ob = Recom()
+# ob.getThreads('Paul Wise')
+# ob.getPopularThreads()

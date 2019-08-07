@@ -13,9 +13,9 @@ cursor.execute('SET NAMES utf8;')
 cursor.execute('SET CHARACTER SET utf8;')
 cursor.execute('SET character_set_connection=utf8;')
 
-sql = "CREATE TABLE threads(id INT(11) AUTO_INCREMENT PRIMARY KEY, author VARCHAR(100), subject VARCHAR(255), content TEXT, date TIMESTAMP);"
+sql = "CREATE TABLE threads(id INT(11) AUTO_INCREMENT PRIMARY KEY, author VARCHAR(100), subject VARCHAR(255), date TIMESTAMP);"
 cursor.execute(sql)
-sql = "CREATE TABLE mails(id INT(11) AUTO_INCREMENT PRIMARY KEY, thread_no INT(11),author VARCHAR(100), subject VARCHAR(255), content TEXT, date TIMESTAMP);"
+sql = "CREATE TABLE mails(id INT(11) AUTO_INCREMENT PRIMARY KEY, thread_no INT(11), author VARCHAR(100), subject VARCHAR(255), content TEXT, date TIMESTAMP);"
 cursor.execute(sql)
 sql = "ALTER TABLE threads CONVERT TO CHARACTER SET utf8"
 cursor.execute(sql)

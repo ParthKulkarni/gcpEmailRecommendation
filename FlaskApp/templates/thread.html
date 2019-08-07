@@ -1,25 +1,91 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html>
 
-{% block body %}
-<hr>
+<head>
+    <meta charset="utf-8">
+    <title>My Flask App</title>
 
-<div class="conatainer">
-    <p>The recommended mails for you is as follows</p>
-    <table class="table table-striped">
-        <tr>
-            <th>Mail ID</th>
-            <th>Sender</th>
-            <th>BODY</th>
-            <th>Date</th>
-        </tr>
-        {% for thread in threads %}
-        <tr>
-            <td>{{thread.id}}</td>
-            <td>{{thread.author}}</td>
-            <td class = "show-read-more">{{thread.content}}</td>
-            <td>{{thread.date}}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            console.log("hello")
+            var threadid = parseInt($('#allThreadCurrentId').html())
+            console.log(threadid)
+            info = {
+                'key': threadid
+            }
+            $.getJSON('/getSummarizeFeed', info, function (data) {
+                var title = data.subject
+                $('#summarizeTitle').text(title)
+                $('#summarizeText').text(data.text)
+
+            });
+        });
+    </script>
+
+
+
+</head>
+
+<body>
+    {% include 'includes/_navbar.html' %}
+    <div class="container">
+        {% include 'includes/_messages.html' %}
+
+
+
+        <hr>
+
+        <div class="conatainer">
+            <div class="text-center"><a id=summButton><button class='btn btn-info' data-toggle="modal"
+                        data-target="#myModal">Summarize</button></a></div>
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                            <h4 class="modal-title" id="summarizeTitle" style="text-align: left">Modal Header</h4>
+                        </div>
+                        <div class="modal-body" id="summarizeText">
+                            <p>Some text in the modal.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <br>
+            <p>The mails in the thread are as follows :</p>
+            <table class="table table-striped">
+                <tr>
+                    <th style="display:none">Thread No</th>
+                    <th>Mail ID</th>
+                    <th>Sender</th>
+                    <th>BODY</th>
+                    <th>Date</th>
+                </tr>
+                {% for thread in threads %}
+                <tr>
+                    <td id="allThreadCurrentId" style="display:none">{{thread.thread_no}}</td>
+                    <td>{{thread.id}}</td>
+                    <td>{{thread.author}}</td>
+                    <td>{{thread.content}}</td>
+                    <td>{{thread.date}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>

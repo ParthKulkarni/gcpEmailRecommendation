@@ -10,6 +10,7 @@ import glob
 import string
 from pprint import pprint
 from collections import Counter, OrderedDict
+from collections import defaultdict
 
 import spacy
 nlp = spacy.load('en',disable=['parser', 'tagger', 'ner'])
@@ -43,18 +44,19 @@ warnings.filterwarnings('ignore')
 torch.manual_seed(42)
 
 BASE_PATH = '/home/niki'
-PATH = BASE_PATH + '/second_model.pt'
+PATH = BASE_PATH + '/0model.pt1model.pt2model.pt3model.pt4model.pt5model.pt6model.pt7model.pt8model.pt9model.pt10model.pt11model.pt12model.pt13model.pt14model.pt15model.pt16model.pt17model.pt18model.pt19model.pt'
 
-TEST_PATH  = '/home/niki/test1.pkl'
-USER_TEST  = '/home/niki/user_weights_test1.npy'
-REM_PATH = '/home/niki/users.pkl'
-
+TEST_PATH  = '/home/niki/test2.pkl'
+USER_TEST  = '/home/niki/user_weights_test2.npy'
+REM_PATH = '/home/niki/users2.pkl'
+THREAD_DICT = 'thread_dict.pkl'
 nile = open('debug-test.txt','w')
+USER_LIMIT = 30
 
 # In[2]:
 
 
-user_vec_len = 659
+user_vec_len = 1773
 
 
 # In[5]:
@@ -70,7 +72,7 @@ tst_weights = np.load(USER_TEST)
 class VectorizeData(Dataset):
     def __init__(self, df_path, maxlen=300):
         self.df = pd.read_pickle(df_path)
-        self.maxlen = 300
+        self.maxlen = 1000
         print(self.df)
         
     def __len__(self):
@@ -80,7 +82,8 @@ class VectorizeData(Dataset):
         X = self.df.bodyidx[idx]
         lens = self.df.lengths[idx]
         y = self.df.int_replier[idx]
-        return X,y,lens
+        tid = self.df.thread_no[idx]
+        return X,y,lens,tid
 
     def pad_data(self, s):
         padded = np.zeros((self.maxlen,), dtype=np.int64)
@@ -98,7 +101,7 @@ dtest = VectorizeData(TEST_PATH)
 # In[8]:
 
 
-input_size = 300
+input_size = 1000
 hidden_size = 50
 num_classes = user_vec_len
 num_epochs = 5
@@ -150,7 +153,7 @@ model.eval()
 
 # In[11]:
 
-
+thread_map = defaultdict(list)
 test_dl= DataLoader(dtest, batch_size=1)
 num_batches = len(test_dl)
 y_true_test1 = list()
@@ -162,6 +165,7 @@ for we, w in zip(tt,tst_weights):
     X = we[0]
     y = we[1]
     lengths = we[2]
+    thread_id = we[3]
 
     w = w.reshape(-1,1)
     w = w.transpose()
@@ -184,7 +188,19 @@ for we, w in zip(tt,tst_weights):
     pred_idx = torch.max(pred, dim=1)[1]
 
     pred = pred.sort()
-    array = pred[1][0][-3:]
+    array = pred[1][0][-20:]
+    # thread_map[thread_id].extend(array)
+    print(thread_id)
+    print("ARRAY")
+    print(array)
+    for i in array:
+        if i not in thread_map[thread_id]:
+            if len(thread_map[thread_id]) + 1> limit :
+                thread_map[thread_id].pop(0)
+                thread_map[thread_id].append(i)
+            else :
+                thread_map[thread_id].append(i)
+            # print(thread_map[thread_id])
     if y in array:
     	hit += 1
 
@@ -193,6 +209,7 @@ for we, w in zip(tt,tst_weights):
     y_pred_test1 += list(pred_idx.cpu().data.numpy())
     print(loss.item())
     total_loss_test += loss.item()
+    break
 
 accuracy = float(hit)/float(len(test_dl))
 train_acc = accuracy_score(y_true_test1, y_pred_test1)
@@ -203,4 +220,9 @@ print('\n')
 nile.write(f'Test loss: {train_loss}\n')
 nile.write(f'Accuracy : {accuracy}')
 nile.write(f'\n\n')
+
+# print(thread_map)
+riley = open(THREAD_DICT,'wb')
+pickle.dump(thread_map,riley)
+riley.close()
 

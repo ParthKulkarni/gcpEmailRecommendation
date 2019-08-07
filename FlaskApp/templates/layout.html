@@ -1,45 +1,173 @@
 <!DOCTYPE html>
 <html>
-    <head> 
-        <meta charset = "utf-8">
-        <title>My Flask App</title>
-        
-        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
-        <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                var maxLength = 300;
-                $(".show-read-more").each(function(){
-                    var myStr = $(this).text();
-                    if($.trim(myStr).length > maxLength){
-                        var newStr = myStr.substring(0, maxLength);
-                        var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
-                        $(this).empty().html(newStr);
-                        $(this).append(' <a href="javascript:void(0);" class="read-more">read more...</a>');
-                        $(this).append('<span class="more-text">' + removedStr + '</span>');
-                    }
-                });
-                $(".read-more").click(function(){
-                    $(this).siblings(".more-text").contents().unwrap();
-                    $(this).remove();
+
+<head>
+    <meta charset="utf-8">
+    <title>My Flask App</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#allThreadId').each(function () {
+                $('td:first-child', this).each(function (i) {
+                    $(this).before('<td style="display:none">' + (i + 1) + '</td>');
                 });
             });
-        </script>
-        <style type="text/css">
-            .show-read-more .more-text{
-                display: none;
-            }
-        </style>
-    </head>
+        });
+    </script>
 
-    <body>
-        
-        {% include 'includes/_navbar.html' %}
-        <div class = "container">
-            {% include 'includes/_messages.html' %}
-            {% block body %} {% endblock %}
-        </div>
+
+    <!-- making function call to get next and previous thread list -->
+    <script type="text/javascript">
+        $(function () {
+            $('a#nextButton').bind('click', function () {
+                var lastId = parseInt($('#allThreadId tr:last-child td:first-child').html())
+                // console.log(lastId)
+                data = {
+                    'key': lastId
+                }
+                $.getJSON('/getNextMails', data,
+                    function (data) {
+                        //change the table values
+                        // console.log(data)
+                        // console.log("hkjnm,")
+
+                        $('#allThreadId tr').each(function () {
+                            var curRow = $(this)
+                            //changing hidden col value
+                            var col1_value = parseInt(curRow.find("td:eq(0)").html());
+                            // var col2_value = parseInt(curRow.find("td:eq(1)").html());
+                            // var col3_value=curRow.find("td:eq(2)").html();
+                            // var col4_value=curRow.find("td:eq(3)").html();
+                            // var col5_value=curRow.find("td:eq(4)").html();
+                            if (col1_value > 0) {
+                                col1_value += 20
+                                var col2_value = data[col1_value - lastId - 1].id;
+                                var val = '<a href="view_thread/' + col2_value + '">' +
+                                    col2_value + '</a>'
+                                var col3_value = data[col1_value - lastId - 1].author;
+                                var col4_value = data[col1_value - lastId - 1].subject;
+                                var col5_value = data[col1_value - lastId - 1].date
+                                curRow.find("td:eq(0)").html(col1_value + '');
+                                curRow.find("td:eq(1)").html(val);
+                                curRow.find("td:eq(2)").html(col3_value);
+                                curRow.find("td:eq(3)").html(col4_value.substring(0, 300) +
+                                    "...");
+                                curRow.find("td:eq(4)").html(col5_value);
+                                // console.log(col1_value)
+                                // console.log(col3_value)
+                                // console.log(col5_value)
+                                // console.log()
+                            }
+                            //changing thread id
+                            // console.log(col2_value)
+                            // console.log(col3_value)
+                        });
+                    });
+                return false;
+            });
+
+
+            $('a#prevButton').bind('click', function () {
+                var lastId = parseInt($('#allThreadId tr:last-child td:first-child').html())
+                // console.log(lastId)
+                data = {
+                    'key': lastId - 40
+                }
+                $.getJSON('/getPreviousMails', data,
+                    function (data) {
+                        //change the table values
+                        // console.log(data[0].id)
+                        // console.log("hkjnm,")
+
+                        $('#allThreadId tr').each(function () {
+                            var curRow = $(this)
+                            //changing hidden col value
+                            var col1_value = parseInt(curRow.find("td:eq(0)").html());
+                            // var col2_value = parseInt(curRow.find("td:eq(1)").html());
+                            // var col3_value=curRow.find("td:eq(2)").html();
+                            // var col4_value=curRow.find("td:eq(3)").html();
+                            // var col5_value=curRow.find("td:eq(4)").html();
+                            if (col1_value > 0) {
+                                col1_value += 20
+                                // console.log(col1_value - lastId - 1)
+                                var col2_value = data[col1_value - lastId - 1].id;
+                                // console.log(col2_value)
+                                var val = '<a href="view_thread/' + col2_value + '">' +
+                                    col2_value + '</a>'
+                                var col3_value = data[col1_value - lastId - 1].author;
+                                var col4_value = data[col1_value - lastId - 1].subject;
+                                var col5_value = data[col1_value - lastId - 1].date
+                                curRow.find("td:eq(0)").html(col1_value - 40);
+                                curRow.find("td:eq(1)").html(val);
+                                curRow.find("td:eq(2)").html(col3_value);
+                                curRow.find("td:eq(3)").html(col4_value.substring(0, 300) +
+                                    "...");
+                                curRow.find("td:eq(4)").html(col5_value);
+                                // console.log(col1_value)
+                                // console.log(col3_value)
+                                // console.log(col5_value)
+                                // console.log()
+                            }
+                            //changing thread id
+                            // console.log(col2_value)
+                            // console.log(col3_value)
+                        });
+                    });
+                return false;
+            });
+
+
+            // $('a#recomButton').bind('click', function(){
+            //     var userName = $('h1 small:first').html()
+            //     info = {'key' : userName}
+            //     // $.getJSON('/recommend', info, function(data){
+            //     //     console.log(data)
+            //     // });
             
-    </body>  
+            //     const url = "localhost:5000/recom/"
+            //     $.ajax({
+            //         url : url, 
+            //         type : "GET",
+            //         data :
+            //     })
+            // });
+
+
+        });
+
+        var userName = $('h1 small:first').html()
+        function submit() {
+        var xhr = new XMLHttpRequest();
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.readyState === 4) {
+        //         alert(xhr.response);
+        //     }
+        // }
+        url = "/recommend?key=" + userName
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send();
+    }
+
+    </script>
+
+
+
+</head>
+
+<body>
+
+    {% include 'includes/_navbar.html' %}
+    <div class="container">
+        {% include 'includes/_messages.html' %}
+        {% block body %} {% endblock %}
+    </div>
+
+</body>
+
 </html>

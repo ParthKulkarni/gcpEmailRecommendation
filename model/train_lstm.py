@@ -44,13 +44,13 @@ torch.manual_seed(42)
 
 
 # In[16]:
-TRAIN_PATH = '/home/niki/train2.pkl'
-USER_TRAIN = '/home/niki/user_weights2.npy'
+TRAIN_PATH = '/home/niki/train1.pkl'
+USER_TRAIN = '/home/niki/user_weights1.npy'
 BASE_PATH = '/home/niki'
 PATH = BASE_PATH + '/'
-REM_PATH = '/home/niki/users2.pkl'
+REM_PATH = '/home/niki/users.pkl'
 
-user_vec_len = 1773
+user_vec_len = 659
 
 nile = open('debug-train.txt','w')
 # In[2]:
@@ -66,7 +66,7 @@ trn_weights = np.load(USER_TRAIN)
 class VectorizeData(Dataset):
 	def __init__(self, df_path, maxlen=300):
 		self.df = pd.read_pickle(df_path)
-		self.maxlen = 1000
+		self.maxlen = 300
 		print(self.df)
 
 	def __len__(self):
@@ -94,8 +94,10 @@ dtrain = VectorizeData(TRAIN_PATH)
 # In[9]:
 
 
-input_size = 1000
+input_size = 300
 hidden_size = 50
+num_layers = 1
+dropout_p = 0.1
 num_classes = user_vec_len
 num_epochs = 20 
 batch_size = 1
@@ -108,35 +110,40 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # embeddings |>
 class NeuralNet(nn.Module):
-	def __init__(self, input_size, hidden_size,user_vec_len, num_classes):
+	def __init__(self, input_size, hidden_size,user_vec_len, num_layers,dropout_p):
 		super(NeuralNet, self).__init__()
-		self.fc1 = nn.Linear(input_size + user_vec_len, hidden_size)
-		nn.init.xavier_uniform_(self.fc1.weight,gain=nn.init.calculate_gain('relu'))
-		nn.init.constant_(self.fc1.bias,0)
-		self.relu = nn.ReLU()
-		self.fc2 = nn.Linear(hidden_size,hidden_size)
-		nn.init.xavier_uniform_(self.fc2.weight,gain=nn.init.calculate_gain('relu'))
-		nn.init.constant_(self.fc2.bias,0)
-		self.relu = nn.ReLU()
-		self.fc3 = nn.Linear(hidden_size, num_classes)
-		self.logprob = nn.LogSoftmax(dim=1)  
+		# self.fc1 = nn.Linear(input_size + user_vec_len, hidden_size)
+		# nn.init.xavier_uniform_(self.fc1.weight,gain=nn.init.calculate_gain('relu'))
+		# nn.init.constant_(self.fc1.bias,0)
+		# self.relu = nn.ReLU()
+		# self.fc2 = nn.Linear(hidden_size,hidden_size)
+		# nn.init.xavier_uniform_(self.fc2.weight,gain=nn.init.calculate_gain('relu'))
+		# nn.init.constant_(self.fc2.bias,0)
+		# self.relu = nn.ReLU()
+		# self.fc3 = nn.Linear(hidden_size, num_classes)
+		# self.logprob = nn.LogSoftmax(dim=1)
+        self.lstm = nn.LSTM(input_size = input_size, hidden_size = hidden_size, num_layers = num_layers, batch_first = True)
+        self.dropout = nn.Dropout(dropout_p)
+        self.fc1 = nn.Linear(rnn_hidden_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, output_dim)
+         
     
 	def forward(self, x,w):
 #         x = torch.FloatTensor(x)
 		catt = torch.cat((x,w),1)
-		out = self.fc1(catt)
-		out = self.relu(out)       
+		out = self.lstm(catt)
+		out = self.dropout(out)       
+		out = self.fc1(out)
+		#out = self.relu(out)
 		out = self.fc2(out)
-		out = self.relu(out)
-		out = self.fc3(out)
-		out = self.logprob(out)
+		#out = self.logprob(out)
 		return out
 
 
 # In[17]:
 
 
-model = NeuralNet(input_size, hidden_size,user_vec_len, num_classes).to(device)
+model = NeuralNet(input_size, hidden_size,user_vec_len, num_layers,dropout_p).to(device)
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
 opt = torch.optim.Adam(model.parameters(), lr=learning_rate) 
@@ -202,11 +209,10 @@ for epoch in range(num_epochs):
     nile.write(f' Epoch {epoch}\nTrain loss: {train_loss}\n')
     nile.write(f'Accuracy : {accuracy}')
     nile.write(f'\n\n')
-#    if epoch % 5 == 0 :
-    model_name = ''
-    model_name = f'{epoch}model.pt'
-    PATH = PATH + model_name
-    torch.save(model.state_dict(),PATH)
+    if epoch % 5 == 0 :
+        model_name = f'{epoch}model.pt'
+        PATH = PATH + model_name
+        torch.save(model.state_dict(),PATH)
 nile.close()
 # architecture 
 # loading pickle file and predict

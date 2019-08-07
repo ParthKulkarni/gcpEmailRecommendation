@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>My Flask App</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        // $('.updateText').on('click', function () {
+        //     req = $.ajax({
+        //         url: '/background_process_test',
+        //         type: 'GET',
+        //     }).done(function (data) {
+        //         $('#myidd').html(data.value)
+        //     });
+        // });
+
+
+                //code to change values present in the table!!
+                        // var tbl = ''
+                        // tbl += '<table class="table" id="allThreadId" cellspacing="0">'
+                        // tbl += '<thead>'
+                        // tbl += '<tr>'
+                        // tbl += '<th style="display:none;">Row Number</th>'
+                        // tbl += '<th>Thread ID</th>'
+                        // // tbl += '<th>Author</th>'
+                        // // tbl += '<th>Content</th>'
+                        // // tbl += '<th>Date</th>'
+                        // tbl += '</thead>'
+                        // tbl += '<tbody>'
+                        // $.each(data, function(index, val){
+                        //     tbl += '<tr>'
+                        //     tbl += '<td style="display:none;">' + (lastId + 1) + '</td>'
+                        //     lastId += 1
+                        //     tbl += '<td><a href="view_thread/{{val["id"]}}">{{val["id"]}}</a></td>'
+                        //     tbl += '</tr>'
+                        // });
+                        // tbl += '</tbody></table>'
+                        // $("#allThreadId").html(tbl)
+
+
+
+
+        $(function() {
+            $('a#test').bind('click', function() {
+                $.getJSON('/background_process_test',
+                    function(data) {
+                        $('#myidd').html(data.value)
+                });
+                return false;
+            });
+        });
+
+    </script>
+
+
+</head>
+
+<body>
+
+
+    <form>
+        <a href=# id=test><button class='btn btn-default'>Test</button></a>
+    </form>
+    <div id="myidd">hellooooooooooooooooooooo</div>
+
+</body>

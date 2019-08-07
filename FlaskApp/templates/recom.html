@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="conatainer">
+    <!-- <p>{{session['statement']}}</p> -->
+    <table class="table table-striped">
+        <tr>
+            <th>Thread ID</th>
+            <th>Author</th>
+            <th>Content</th>
+            <th>Date</th>
+        </tr>
+        {% for thread in threads %}
+        <tr>
+            <td><a href="view_thread/{{thread.id}}">{{thread.id}}</a></td>
+            <td>{{thread.author}}</td>
+            <td>{{thread.subject}}</td>
+            <td>{{thread.date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
